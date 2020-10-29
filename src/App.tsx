@@ -8,8 +8,11 @@ import {
   Switch,
 } from "react-router-dom";
 import DashboardLazy from "./Container/Dashboard/Dashboard.lazy";
+import { useSelector } from "react-redux";
+import { getLogin } from "./redux/selector/loginSelector";
 
 function App() {
+  const login = useSelector(getLogin);
   return (
     <Router>
       <Switch>
@@ -19,9 +22,7 @@ function App() {
         />
         <Route path="/login" render={(props) => <LoginLazy {...props} />} />
         <Route path="/" exact>
-          <Redirect
-            to={localStorage.getItem("OUTH_TOKEN") ? "/dashboard" : "/login"}
-          />
+          <Redirect to={login ? "/dashboard" : "/login"} />
         </Route>
       </Switch>
     </Router>

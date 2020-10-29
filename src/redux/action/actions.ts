@@ -1,5 +1,6 @@
 export const actions={
-    "LOGIN":"LOGIN",
-    "LOGOUT":"LOGOUT",
-    "LOGIN_ERROR":"ERROR"
+    SET_LOGIN:"SET_LOGIN",
+    SET_DATA:"SET_DATA",
+    LOGOUT:"LOGOUT",
+    LOGIN_ERROR:"ERROR",
 };

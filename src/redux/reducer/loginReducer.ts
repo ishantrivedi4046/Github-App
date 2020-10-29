@@ -3,18 +3,23 @@ import { actions } from "../action/actions";
 const initialState={
     isLoggedIn:false,
     userData:{},
-    errorMessage:""
+    errorMessage:"",
 };
 
 const loginReducer=(state=initialState,action:{type:string,payload:any})=>{
     switch(action.type){
-        case actions.LOGIN:
+        case actions.SET_LOGIN:
         return {
             ...state,
             isLoggedIn:action.payload.isLoggedIn,
-            userData:action.payload.data
+        }
+        case actions.SET_DATA:
+        return {
+            ...state,
+            userData:action.payload.data,
         }
         case actions.LOGOUT:
+            localStorage.clear();
             return{
                 ...state,
                 isLoggedIn:false,
