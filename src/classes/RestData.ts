@@ -13,6 +13,19 @@ export class RestData {
   blog = "";
   location = "";
   bio = "";
+  publicRepos=0;
+  publicGists=0;
+  followers=0;
+  following=0;
+  privateGists=0;
+  privateRepos=0;
+  collaborators=0;
+  twoFactor=false;
+  email=null;
+  hirable=null;
+  twitterName=null;
+  company=null;
+
   constructor(data: any = {}) {
     if (data) {
       this.username = data.login;
@@ -29,6 +42,80 @@ export class RestData {
       this.blog = data.blog;
       this.location = data.location;
       this.bio = data.bio;
+      this.publicRepos=data.public_repos
+      this.privateGists=data.public_gists
+      this.followers=data.followers
+      this.following=data.following
+      this.privateGists=data.private_gists
+      this.privateRepos=data.total_private_repos
+      this.twoFactor=data.two_factor_authentication
+      this.collaborators=data.collaborators
+      this.email=data.email
+      this.hirable=data.hireable
+      this.twitterName=data.twitter_username
+      this.company=data.company
     }
   }
+
+  get userLocation(){
+    return this.location;
+  }
+  get profileImage(){
+    return this.avatar_url;
+  }
+
+  get userName(){
+    return this.username;
+  }
+
+  get realName(){
+    return this.name;
+  }
+
+  get userBio(){
+    return this.bio;
+  }
+
+  get userPublicRepos(){
+    return this.publicRepos;
+  }
+  get userPrivateRepos(){
+    return this.privateRepos;
+  }
+  get userPrivateGists(){
+    return this.privateGists;
+  }
+  get userPublicGists(){
+    return this.publicGists;
+  }
+  get userFollowers(){
+    return this.followers;
+  }
+  get userFollowing(){
+    return this.following;
+  }
+  get twoFacterAuthentication(){
+    return this.twoFactor;
+  }
+
+  get userBlog(){
+    return this.blog;
+  }
+
+  get hirability(){
+    return this.hirable;
+  }
+
+  get twitterHandle(){
+    return this.twitterName;
+  }
+
+  get userEmail(){
+    return this.email;
+  }
+
+  get userCompany(){
+    return this.company;
+  }
+
 }

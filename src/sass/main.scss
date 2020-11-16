@@ -4,6 +4,7 @@
 // variables for colors
 $color-primary: #05264c;
 $color-secondary: #083263;
+$color-tertiary: #1890ff;
 $color-button-border: #1ad4d4;
 $color-white: #fff;
 $color-input: #fffcc8;
@@ -112,4 +113,70 @@ html {
   margin-left: 1rem;
   margin-bottom: 4rem;
   background-color: $color-white;
+}
+
+.profile {
+  &-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+    padding-top: 4rem;
+    border: solid 0.2rem rgba(128, 128, 128, 0.2);
+    border-radius: 1rem;
+  }
+  &-header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    &-image {
+      height: 100%;
+      width: 12rem;
+      border-radius: 100%;
+    }
+    .titles {
+      height: 100%;
+      margin-left: 1.5rem;
+      &-1 {
+        font-weight: 800;
+        font-size: xx-large;
+        color: $color-primary;
+      }
+    }
+  }
+}
+
+.iconStyle {
+  font-size: large;
+  color: $color-tertiary;
+}
+
+.contentStyle {
+  font-size: small;
+  font-weight: 500;
+  color: rgba($color-secondary, $alpha: 0.7);
+}
+
+.containerStyle {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  &-icon {
+    font-size: large;
+    color: $color-tertiary;
+  }
+  &-content {
+    font-weight: 400;
+    color: $color-primary;
+  }
+}
+
+.radioButton {
+  font-size: small;
+  font-weight: 500;
+}
+
+.radioContainer {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  margin-bottom: 1.5rem;
 }

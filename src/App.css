@@ -88,3 +88,56 @@ html {
   margin-left: 1rem;
   margin-bottom: 4rem;
   background-color: #fff; }
+
+.profile-container {
+  padding-left: 4rem;
+  padding-right: 4rem;
+  padding-top: 4rem;
+  border: solid 0.2rem rgba(128, 128, 128, 0.2);
+  border-radius: 1rem; }
+
+.profile-header {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%; }
+  .profile-header-image {
+    height: 100%;
+    width: 12rem;
+    border-radius: 100%; }
+  .profile-header .titles {
+    height: 100%;
+    margin-left: 1.5rem; }
+    .profile-header .titles-1 {
+      font-weight: 800;
+      font-size: xx-large;
+      color: #05264c; }
+
+.iconStyle {
+  font-size: large;
+  color: #1890ff; }
+
+.contentStyle {
+  font-size: small;
+  font-weight: 500;
+  color: rgba(8, 50, 99, 0.7); }
+
+.containerStyle {
+  margin-top: 1rem;
+  margin-bottom: 1rem; }
+  .containerStyle-icon {
+    font-size: large;
+    color: #1890ff; }
+  .containerStyle-content {
+    font-weight: 400;
+    color: #05264c; }
+
+.radioButton {
+  font-size: small;
+  font-weight: 500; }
+
+.radioContainer {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  margin-bottom: 1.5rem; }
