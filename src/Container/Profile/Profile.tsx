@@ -1,14 +1,25 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RestData } from "../../classes/RestData";
 import AdjacentIconName from "../../Components/AdjacentIconName";
-import { getUser } from "../../redux/selector/loginSelector";
+import {
+  getOuthToken,
+  getSearchedUserData,
+  getUser,
+} from "../../redux/selector/loginSelector";
 import * as Vsc from "react-icons/vsc";
 import * as Ti from "react-icons/ti";
 import * as Im from "react-icons/im";
 import * as Hi from "react-icons/hi";
+import * as Md from "react-icons/md";
 import ChartComponent from "../../Components/ChartComponent";
-import { Radio } from "antd";
+import { Button, Col, Radio, Row, Typography } from "antd";
+import Search from "antd/lib/input/Search";
+import api from "../../Apiservice/loginSerice";
+import { actionCreator } from "../../redux/action/actionCreator";
+import { actions } from "../../redux/action/actions";
+import Spinner from "../../antDesign/Spinner";
+import Icons from "../../Util/Icons";
 
 const chartOptions = { "1": "LINE", "2": "BAR", "3": "AREA" };
 const PROFILE_CHART_COLOR = "#1890ff";
@@ -16,8 +27,17 @@ const PROFILE_CHART_COLOR = "#1890ff";
 const Profile = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [radioValue, setRadioValue] = useState<"1" | "2" | "3">("1");
-  const userData: RestData = useSelector(getUser);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [value, setValue] = useState<string>("");
+
+  const selectorFunction = value ? getSearchedUserData : getUser;
+  const userData: any = useSelector(selectorFunction);
+  const searchedUser = useSelector(getSearchedUserData);
+  const dispatch = useDispatch();
+
   const { profileImage, userBio, userName, realName, location } = userData;
+
   const data = [
     { name: "Public Repo", Count: userData.publicRepos },
     { name: "Private Repo", Count: userData.privateRepos },
@@ -26,106 +46,192 @@ const Profile = () => {
     { name: "Followers", Count: userData.userFollowers },
     { name: "Following", Count: userData.userFollowing },
     { name: "Collaborators", Count: userData.collaborators },
-  ];
+  ].filter((item) => item.Count !== -1);
 
-  const generalInfo = [
+  let generalInfo = [
     {
       icon: Vsc.VscSymbolNamespace,
       content: realName,
     },
     { icon: Ti.TiLocation, content: location },
-    { icon: Im.ImBlog, content: userData.blog },
-    { icon: Hi.HiOutlineMail, content: userData.email },
+    { icon: Im.ImBlog, content: userData.userBlog },
+    { icon: Hi.HiOutlineMail, content: userData.userEmail },
     { icon: Im.ImTwitter, content: userData.twitterHandle },
     { icon: Hi.HiOfficeBuilding, content: userData.userCompany },
   ];
+  generalInfo = generalInfo.filter((info) => !(info.content === null));
 
-  return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <img
-          src={profileImage}
-          alt="userimage"
-          className="profile-header-image"
+  const handleSearch = (value: any) => {
+    setValue(value);
+    if (value) {
+      api
+        .getSearchedUser(value, getOuthToken())
+        .then((res) => {
+          const searchedData = new RestData(res.data);
+          setLoading(false);
+          setError("");
+          dispatch(
+            actionCreator(actions.SET_SEARCHED_USER_DATA, {
+              data: searchedData,
+            })
+          );
+        })
+        .catch((error) => {
+          setLoading(false);
+          setError(error.message);
+        });
+    } else {
+      setLoading(false);
+      dispatch(
+        actionCreator(actions.SET_SEARCHED_USER_DATA, {
+          data: {},
+        })
+      );
+    }
+  };
+
+  const handleButtonClick = () => {
+    setValue("");
+    setError("");
+    dispatch(
+      actionCreator(actions.SET_SEARCHED_USER_DATA, {
+        data: {},
+      })
+    );
+  };
+
+  return loading ? (
+    <Spinner size="large" tip="Finding User" />
+  ) : (
+    <>
+      <div className="profile-container">
+        <Button
+          type="primary"
+          size="large"
+          onClick={handleButtonClick}
+          icon={<Icons Value={Md.MdArrowBack} className="goBack" />}
+          shape="circle"
+          disabled={Object.keys(searchedUser).length === 0 && error === ""}
         />
-        <div className="titles">
-          <div className="titles-1">{userName}</div>
+        {error ? (
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
               width: "100%",
-              background: "gray",
+              height: "100vh",
+              display: "flex",
+              flexFlow: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {generalInfo.map((info, index) => (
-              <AdjacentIconName
-                value={info.icon}
-                content={info.content ? info.content : "No Data"}
-                contentClassName="contentStyle"
-                IconClassName="iconStyle"
-                key={index}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-      <AdjacentIconName
-        value={Ti.TiPencil}
-        content={userBio}
-        containerClassName="containerStyle"
-        IconClassName="containerStyle-icon"
-        contentClassName="containerStyle-content"
-      />
-      {visible && (
-        <>
-          <div className="radioContainer">
-            <Radio.Group
-              onChange={(e) => setRadioValue(e.target.value)}
-              value={radioValue}
+            <Typography.Title
+              level={3}
+              style={{ color: `${PROFILE_CHART_COLOR}` }}
             >
-              <Radio value="1" className="radioButton">
-                LINE
-              </Radio>
-              <Radio value="2" className="radioButton">
-                BAR
-              </Radio>
-              <Radio value="3" className="radioButton">
-                AREA
-              </Radio>
-            </Radio.Group>
+              "No such user exists!"
+            </Typography.Title>
           </div>
-          <ChartComponent
-            data={data}
-            Chart={chartOptions[radioValue]}
-            xDataKey="name"
-            yDataKey="Count"
-            legend
-            legendAlign="bottom"
-            width="100%"
-            height={325}
-            LineStroke={PROFILE_CHART_COLOR}
-            gridStroke="#ccc"
-            barColor={PROFILE_CHART_COLOR}
-            areaColor={PROFILE_CHART_COLOR}
-          />
-        </>
-      )}
-      <div style={{ width: "100%", display: "flex", justifyContent: "end" }}>
-        <p
-          onClick={() => setVisible((prev) => !prev)}
-          style={{
-            color: "#1890ff",
-            fontWeight: "normal",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-          }}
-        >
-          {visible ? "Less" : "More"}
-        </p>
+        ) : (
+          <>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "end",
+                alignContent: "center",
+                marginBottom: "2rem",
+              }}
+            >
+              <Search
+                placeholder="input search github user"
+                onSearch={(value: any) => {
+                  setLoading(true);
+                  handleSearch(value);
+                }}
+                enterButton
+                style={{ width: "24rem" }}
+              />
+            </div>
+            <div className="profile-header">
+              <img
+                src={profileImage}
+                alt="userimage"
+                className="profile-header-image"
+              />
+              <div className="titles">
+                <div className="titles-1">{userName}</div>
+                {generalInfo.map((info, index) => (
+                  <AdjacentIconName
+                    value={info.icon}
+                    content={info.content ? info.content : "No Data"}
+                    containerClassName="detailContainerStyle"
+                    contentClassName="contentStyle"
+                    IconClassName="iconStyle"
+                    key={index}
+                  />
+                ))}
+              </div>
+            </div>
+            <AdjacentIconName
+              value={Ti.TiPencil}
+              content={!userBio ? "No Bio" : userBio}
+              containerClassName="containerStyle"
+              IconClassName="containerStyle-icon"
+              contentClassName="containerStyle-content"
+            />
+            {visible && (
+              <>
+                <div className="radioContainer">
+                  <Radio.Group
+                    onChange={(e) => setRadioValue(e.target.value)}
+                    value={radioValue}
+                  >
+                    <Radio value="1" className="radioButton">
+                      LINE
+                    </Radio>
+                    <Radio value="2" className="radioButton">
+                      BAR
+                    </Radio>
+                    <Radio value="3" className="radioButton">
+                      AREA
+                    </Radio>
+                  </Radio.Group>
+                </div>
+                <ChartComponent
+                  data={data}
+                  Chart={chartOptions[radioValue]}
+                  xDataKey="name"
+                  yDataKey="Count"
+                  legend
+                  legendAlign="bottom"
+                  width="100%"
+                  height={325}
+                  LineStroke={PROFILE_CHART_COLOR}
+                  gridStroke="#ccc"
+                  barColor={PROFILE_CHART_COLOR}
+                  areaColor={PROFILE_CHART_COLOR}
+                />
+              </>
+            )}
+            <div
+              style={{ width: "100%", display: "flex", justifyContent: "end" }}
+            >
+              <p
+                onClick={() => setVisible((prev) => !prev)}
+                style={{
+                  color: "#1890ff",
+                  fontWeight: "normal",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                }}
+              >
+                {visible ? "Less" : "More"}
+              </p>
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

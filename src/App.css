@@ -100,7 +100,9 @@ html {
   display: flex;
   justify-content: start;
   align-items: center;
-  width: 100%; }
+  width: 100%;
+  margin-bottom: 1rem;
+  z-index: 1; }
   .profile-header-image {
     height: 100%;
     width: 12rem;
@@ -112,6 +114,9 @@ html {
       font-weight: 800;
       font-size: xx-large;
       color: #05264c; }
+
+.goBack {
+  margin-top: 0.5rem; }
 
 .iconStyle {
   font-size: large;
@@ -141,3 +146,6 @@ html {
   width: 100%;
   justify-content: end;
   margin-bottom: 1.5rem; }
+
+.detailContainerStyle {
+  margin-bottom: 0.8rem; }

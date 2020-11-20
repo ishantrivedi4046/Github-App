@@ -128,6 +128,8 @@ html {
     justify-content: start;
     align-items: center;
     width: 100%;
+    margin-bottom: 1rem;
+    z-index: 1;
     &-image {
       height: 100%;
       width: 12rem;
@@ -144,7 +146,9 @@ html {
     }
   }
 }
-
+.goBack {
+  margin-top: 0.5rem;
+}
 .iconStyle {
   font-size: large;
   color: $color-tertiary;
@@ -179,4 +183,8 @@ html {
   width: 100%;
   justify-content: end;
   margin-bottom: 1.5rem;
+}
+
+.detailContainerStyle {
+  margin-bottom: 0.8rem;
 }

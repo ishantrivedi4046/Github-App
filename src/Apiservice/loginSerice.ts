@@ -15,6 +15,11 @@ class LoginService{
         const userUrl=`${constants.REACT_APP_BASE_URL}/user`;
         return axios.get(userUrl,{headers:{Authorization: "token " + token}});
     }
+
+    getSearchedUser=(value:any,token:string)=>{
+        const url=`https://api.github.com/users/${value}`;
+        return axios.get(url,{headers:{Authorization: "token " + token}});
+    }
 }
 
 const obj=new LoginService();

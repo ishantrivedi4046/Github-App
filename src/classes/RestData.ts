@@ -1,3 +1,5 @@
+import { get } from "lodash";
+
 export class RestData {
   username = "";
   node_id = "";
@@ -13,18 +15,18 @@ export class RestData {
   blog = "";
   location = "";
   bio = "";
-  publicRepos=0;
-  publicGists=0;
-  followers=0;
-  following=0;
-  privateGists=0;
-  privateRepos=0;
-  collaborators=0;
-  twoFactor=false;
-  email=null;
-  hirable=null;
-  twitterName=null;
-  company=null;
+  publicRepos = 0;
+  publicGists = 0;
+  followers = 0;
+  following = 0;
+  privateGists = 0;
+  privateRepos = 0;
+  collaborators = 0;
+  twoFactor = false;
+  email = null;
+  hirable = null;
+  twitterName = null;
+  company = null;
 
   constructor(data: any = {}) {
     if (data) {
@@ -42,80 +44,88 @@ export class RestData {
       this.blog = data.blog;
       this.location = data.location;
       this.bio = data.bio;
-      this.publicRepos=data.public_repos
-      this.privateGists=data.public_gists
-      this.followers=data.followers
-      this.following=data.following
-      this.privateGists=data.private_gists
-      this.privateRepos=data.total_private_repos
-      this.twoFactor=data.two_factor_authentication
-      this.collaborators=data.collaborators
-      this.email=data.email
-      this.hirable=data.hireable
-      this.twitterName=data.twitter_username
-      this.company=data.company
+      this.publicRepos = data.public_repos;
+      this.publicGists = data.public_gists;
+      this.followers = data.followers;
+      this.following = data.following;
+      this.privateGists =
+        get(data, ["private_gists"], undefined) === undefined
+          ? -1
+          : get(data, ["private_gists"], undefined);
+      this.privateRepos =
+        get(data, ["total_private_repos"], undefined) === undefined
+          ? -1
+          : get(data, ["total_private_repos"], undefined);
+      this.twoFactor = data.two_factor_authentication;
+      this.collaborators =
+        get(data, ["collaborators"], undefined) === undefined
+          ? -1
+          : get(data, ["collaborators"], undefined);
+      this.email = data.email;
+      this.hirable = data.hireable;
+      this.twitterName = data.twitter_username;
+      this.company = data.company;
     }
   }
 
-  get userLocation(){
+  get userLocation() {
     return this.location;
   }
-  get profileImage(){
+  get profileImage() {
     return this.avatar_url;
   }
 
-  get userName(){
+  get userName() {
     return this.username;
   }
 
-  get realName(){
+  get realName() {
     return this.name;
   }
 
-  get userBio(){
+  get userBio() {
     return this.bio;
   }
 
-  get userPublicRepos(){
+  get userPublicRepos() {
     return this.publicRepos;
   }
-  get userPrivateRepos(){
+  get userPrivateRepos() {
     return this.privateRepos;
   }
-  get userPrivateGists(){
+  get userPrivateGists() {
     return this.privateGists;
   }
-  get userPublicGists(){
+  get userPublicGists() {
     return this.publicGists;
   }
-  get userFollowers(){
+  get userFollowers() {
     return this.followers;
   }
-  get userFollowing(){
+  get userFollowing() {
     return this.following;
   }
-  get twoFacterAuthentication(){
+  get twoFacterAuthentication() {
     return this.twoFactor;
   }
 
-  get userBlog(){
-    return this.blog;
+  get userBlog() {
+    return this.blog ? this.blog : null;
   }
 
-  get hirability(){
+  get hirability() {
     return this.hirable;
   }
 
-  get twitterHandle(){
+  get twitterHandle() {
     return this.twitterName;
   }
 
-  get userEmail(){
-    return this.email;
+  get userEmail() {
+    return this.email ? this.email : null;
   }
 
-  get userCompany(){
+  get userCompany() {
     return this.company;
   }
-
 }

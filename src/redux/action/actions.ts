@@ -1,6 +1,7 @@
-export const actions={
-    SET_LOGIN:"SET_LOGIN",
-    SET_DATA:"SET_DATA",
-    LOGOUT:"LOGOUT",
-    LOGIN_ERROR:"ERROR",
+export const actions = {
+  SET_LOGIN: "SET_LOGIN",
+  SET_DATA: "SET_DATA",
+  LOGOUT: "LOGOUT",
+  LOGIN_ERROR: "ERROR",
+  SET_SEARCHED_USER_DATA: "SEARCHED_USER_DATA",
 };
