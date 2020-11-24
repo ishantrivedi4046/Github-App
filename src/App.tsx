@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import DashboardLazy from "./Container/Dashboard/Dashboard.lazy";
 import { useSelector } from "react-redux";
-import { getLogin } from "./redux/selector/loginSelector";
+import { getLogin } from "./redux/selector/restApiSelector";
 
 function App() {
   const login = useSelector(getLogin);

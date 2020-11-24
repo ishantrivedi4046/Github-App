@@ -8,7 +8,7 @@ import { actions } from "../../redux/action/actions";
 import {
   getAutherizationLoading,
   getLogin,
-} from "../../redux/selector/loginSelector";
+} from "../../redux/selector/restApiSelector";
 import { constants } from "../../Util/globalConstants";
 import logo from "../../assets/img/github-octocat.svg";
 import { useHistory } from "react-router";

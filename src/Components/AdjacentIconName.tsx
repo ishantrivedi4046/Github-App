@@ -7,7 +7,7 @@ interface Props {
   contentClassName?: string;
   containerClassName?: string;
   content: string;
-  key?: any;
+  propkey: any;
 }
 
 const AdjacentIconName: React.FC<Props> = (props) => {
@@ -19,7 +19,7 @@ const AdjacentIconName: React.FC<Props> = (props) => {
         justifyContent: "start",
         alignItems: "center",
       }}
-      key={props.key}
+      key={props.propkey}
     >
       <Icons Value={props.value} className={props.IconClassName} />
       <div

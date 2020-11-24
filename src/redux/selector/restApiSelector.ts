@@ -16,3 +16,7 @@ export const getOuthToken = () => localStorage.getItem("OUTH_TOKEN") || "";
 
 export const getAutherizationLoading = () =>
   localStorage.getItem("autherization_initiated") || "";
+
+export const getFollowersList = (state: any) => {
+  return get(state.followReducer, ["followersList"], []);
+};

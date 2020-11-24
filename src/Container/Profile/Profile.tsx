@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RestData } from "../../classes/RestData";
 import AdjacentIconName from "../../Components/AdjacentIconName";
@@ -6,14 +6,14 @@ import {
   getOuthToken,
   getSearchedUserData,
   getUser,
-} from "../../redux/selector/loginSelector";
+} from "../../redux/selector/restApiSelector";
 import * as Vsc from "react-icons/vsc";
 import * as Ti from "react-icons/ti";
 import * as Im from "react-icons/im";
 import * as Hi from "react-icons/hi";
 import * as Md from "react-icons/md";
 import ChartComponent from "../../Components/ChartComponent";
-import { Button, Col, Radio, Row, Typography } from "antd";
+import { Button, Radio, Typography } from "antd";
 import Search from "antd/lib/input/Search";
 import api from "../../Apiservice/loginSerice";
 import { actionCreator } from "../../redux/action/actionCreator";
@@ -22,9 +22,14 @@ import Spinner from "../../antDesign/Spinner";
 import Icons from "../../Util/Icons";
 
 const chartOptions = { "1": "LINE", "2": "BAR", "3": "AREA" };
-const PROFILE_CHART_COLOR = "#1890ff";
+export const PROFILE_CHART_COLOR = "#1890ff";
 
-const Profile = () => {
+interface ProfileProps {
+  propsUserName?: string;
+  search?: boolean;
+}
+
+const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [radioValue, setRadioValue] = useState<"1" | "2" | "3">("1");
   const [loading, setLoading] = useState<boolean>(false);
@@ -37,6 +42,13 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const { profileImage, userBio, userName, realName, location } = userData;
+
+  useEffect(() => {
+    if (propsUserName) {
+      handleSearch(propsUserName);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propsUserName]);
 
   const data = [
     { name: "Public Repo", Count: userData.publicRepos },
@@ -62,6 +74,7 @@ const Profile = () => {
   generalInfo = generalInfo.filter((info) => !(info.content === null));
 
   const handleSearch = (value: any) => {
+    setLoading(true);
     setValue(value);
     if (value) {
       api
@@ -105,14 +118,16 @@ const Profile = () => {
   ) : (
     <>
       <div className="profile-container">
-        <Button
-          type="primary"
-          size="large"
-          onClick={handleButtonClick}
-          icon={<Icons Value={Md.MdArrowBack} className="goBack" />}
-          shape="circle"
-          disabled={Object.keys(searchedUser).length === 0 && error === ""}
-        />
+        {search && (
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleButtonClick}
+            icon={<Icons Value={Md.MdArrowBack} className="goBack" />}
+            shape="circle"
+            disabled={Object.keys(searchedUser).length === 0 && error === ""}
+          />
+        )}
         {error ? (
           <div
             style={{
@@ -133,25 +148,26 @@ const Profile = () => {
           </div>
         ) : (
           <>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "end",
-                alignContent: "center",
-                marginBottom: "2rem",
-              }}
-            >
-              <Search
-                placeholder="input search github user"
-                onSearch={(value: any) => {
-                  setLoading(true);
-                  handleSearch(value);
+            {search && (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "end",
+                  alignContent: "center",
+                  marginBottom: "2rem",
                 }}
-                enterButton
-                style={{ width: "24rem" }}
-              />
-            </div>
+              >
+                <Search
+                  placeholder="input search github user"
+                  onSearch={(value: any) => {
+                    handleSearch(value);
+                  }}
+                  enterButton
+                  style={{ width: "24rem" }}
+                />
+              </div>
+            )}
             <div className="profile-header">
               <img
                 src={profileImage}
@@ -167,7 +183,7 @@ const Profile = () => {
                     containerClassName="detailContainerStyle"
                     contentClassName="contentStyle"
                     IconClassName="iconStyle"
-                    key={index}
+                    propkey={index}
                   />
                 ))}
               </div>
@@ -178,6 +194,7 @@ const Profile = () => {
               containerClassName="containerStyle"
               IconClassName="containerStyle-icon"
               contentClassName="containerStyle-content"
+              propkey="bio"
             />
             {visible && (
               <>
@@ -233,6 +250,11 @@ const Profile = () => {
       </div>
     </>
   );
+};
+
+Profile.defaultProps = {
+  search: true,
+  propsUserName: "",
 };
 
 export default Profile;

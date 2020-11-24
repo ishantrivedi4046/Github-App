@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getLogin, getOuthToken } from "../../redux/selector/loginSelector";
+import { getLogin, getOuthToken } from "../../redux/selector/restApiSelector";
 import api from "../../Apiservice/loginSerice";
 import { RestData } from "../../classes/RestData";
 import { actionCreator } from "../../redux/action/actionCreator";
@@ -76,7 +76,7 @@ function Dashboard() {
           dispatch(actionCreator(actions.LOGOUT));
         });
     }
-  }, []);
+  }, [dispatch, loading, token]);
 
   if (!loggedIn) {
     return <Redirect to="/login" />;

@@ -34,7 +34,7 @@ export class RestData {
       this.node_id = data.node_id;
       this.avatar_url = data.avatar_url;
       this.followers_url = data.followers_url;
-      this.followers_url = data.following_url;
+      this.following_url = data.following_url;
       this.gists_url = data.gists_url;
       this.subscriptions_url = data.subscriptions_url;
       this.organizations_url = data.organizations_url;
@@ -127,5 +127,9 @@ export class RestData {
 
   get userCompany() {
     return this.company;
+  }
+
+  get followersUrl() {
+    return this.followers_url;
   }
 }
