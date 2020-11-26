@@ -17,17 +17,25 @@ import Profile, { PROFILE_CHART_COLOR } from "../Profile/Profile";
 interface FollowersProps {
   url?: string;
   type?: string;
+  data?: RestData;
 }
 
 const Followers: React.FC<FollowersProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
-  const userData: RestData = useSelector(getUser);
+  const currentUserData = useSelector(getUser);
+  const userData: RestData = props.data ? props.data : currentUserData;
   const [searchedValue, setSearchedValue] = useState("");
   const followersList = useSelector(getFollowersList);
   const dispatch = useDispatch();
   const { followers_url } = userData;
+  const URL =
+    props.type === "Followers"
+      ? followers_url
+      : props.data
+      ? props.data.following_url
+      : props.url;
 
   const columns = [
     {
@@ -94,10 +102,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
   useEffect(() => {
     if (loading) {
       api
-        .getAuthUserdataList(
-          props.type === "Following" ? props.url || "" : followers_url,
-          getOuthToken()
-        )
+        .getAuthUserdataList(URL || followers_url, getOuthToken())
         .then((res) => {
           const listData = res.data.map((item: any) => new RestData(item));
           setLoading(false);

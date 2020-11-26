@@ -113,6 +113,10 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
     );
   };
 
+  const handleFollowFeature = (type: string) => {
+    window.open(`/follow?${type}`);
+  };
+
   return loading ? (
     <Spinner size="large" tip="Finding User" />
   ) : (
@@ -188,6 +192,25 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
                 ))}
               </div>
             </div>
+            {Object.keys(searchedUser).length > 0 && (
+              <>
+                <Button
+                  type="primary"
+                  onClick={() => handleFollowFeature("Followers")}
+                  style={{ marginRight: "1rem" }}
+                  size="small"
+                >
+                  Followers
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={() => handleFollowFeature("Following")}
+                  size="small"
+                >
+                  Following
+                </Button>
+              </>
+            )}
             <AdjacentIconName
               value={Ti.TiPencil}
               content={!userBio ? "No Bio" : userBio}
