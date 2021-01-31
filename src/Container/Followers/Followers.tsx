@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../antDesign/Spinner";
 import api from "../../Apiservice/loginSerice";
 import { RestData } from "../../classes/RestData";
+import { getFollowColumns } from "../../Config/followTableConfig";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
 import {
@@ -17,7 +18,6 @@ import Profile, { PROFILE_CHART_COLOR } from "../Profile/Profile";
 interface FollowersProps {
   url?: string;
   type?: string;
-  data?: RestData;
 }
 
 const Followers: React.FC<FollowersProps> = (props) => {
@@ -25,60 +25,12 @@ const Followers: React.FC<FollowersProps> = (props) => {
   const [error, setError] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const currentUserData = useSelector(getUser);
-  const userData: RestData = props.data ? props.data : currentUserData;
+  const userData: RestData = currentUserData;
   const [searchedValue, setSearchedValue] = useState("");
   const followersList = useSelector(getFollowersList);
   const dispatch = useDispatch();
   const { followers_url } = userData;
-  const URL =
-    props.type === "Followers"
-      ? followers_url
-      : props.data
-      ? props.data.following_url
-      : props.url;
-
-  const columns = [
-    {
-      title: "AVATAR",
-      dataIndex: "avatar_url",
-      key: "avatar_url",
-      width: "10%",
-      render: (text: any, record: any, index: number) => (
-        <img
-          src={record.avatar_url}
-          alt="No Avatar"
-          style={{
-            borderRadius: "100%",
-            backgroundSize: "contain",
-            width: "6rem",
-            height: "6rem",
-          }}
-        />
-      ),
-    },
-    {
-      title: "GITHUB USERNAME",
-      dataIndex: "username",
-      key: "username",
-      render: (text: any, record: any, index: number) => (
-        <Typography.Text
-          style={{ color: `${PROFILE_CHART_COLOR}`, fontSize: "medium" }}
-        >
-          {record.username}
-        </Typography.Text>
-      ),
-    },
-    {
-      title: "ACTION",
-      dataIndex: "action",
-      key: "action",
-      render: (text: any, record: any, index: number) => (
-        <Button danger type="link" onClick={() => handleViewProfile(record)}>
-          View Profile
-        </Button>
-      ),
-    },
-  ];
+  const URL = props.url ? props.url : followers_url;
 
   const fakeData = [
     {
@@ -102,7 +54,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
   useEffect(() => {
     if (loading) {
       api
-        .getAuthUserdataList(URL || followers_url, getOuthToken())
+        .getAuthUserdataList(URL, getOuthToken())
         .then((res) => {
           const listData = res.data.map((item: any) => new RestData(item));
           setLoading(false);
@@ -116,7 +68,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [followers_url, loading]);
+  }, [URL, loading]);
 
   const handleModalClose = () => {
     setVisible(false);
@@ -129,14 +81,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
   };
 
   return loading ? (
-    <Spinner
-      size="large"
-      tip={
-        props.type === "Followers"
-          ? "Getting Followers!"
-          : "Getting Who you Follow!"
-      }
-    />
+    <Spinner size="large" tip="Getting Info!" />
   ) : (
     <>
       <Modal
@@ -154,7 +99,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
         <Profile search={false} propsUserName={searchedValue} />
       </Modal>
       <Table
-        columns={columns}
+        columns={getFollowColumns(handleViewProfile)}
         dataSource={dataSource.length === 0 ? fakeData : dataSource}
         style={{ margin: "2rem" }}
         pagination={{}}

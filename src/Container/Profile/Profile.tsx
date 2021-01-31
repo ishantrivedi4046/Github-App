@@ -39,6 +39,7 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
   const selectorFunction = value ? getSearchedUserData : getUser;
   const userData: any = useSelector(selectorFunction);
   const searchedUser = useSelector(getSearchedUserData);
+  const authUser = useSelector(getUser);
   const dispatch = useDispatch();
 
   const { profileImage, userBio, userName, realName, location } = userData;
@@ -114,7 +115,15 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
   };
 
   const handleFollowFeature = (type: string) => {
-    window.open(`/follow?${type}`);
+    let url =
+      type === "Followers"
+        ? searchedUser.followers_url
+        : searchedUser.following_url;
+    if (type === "Following") {
+      const index = url.indexOf("{");
+      url = url.substring(0, index);
+    }
+    window.open(`/follow?url=${url}&authUser=${authUser.userName}`);
   };
 
   return loading ? (

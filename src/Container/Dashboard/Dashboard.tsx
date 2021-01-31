@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getLogin, getOuthToken } from "../../redux/selector/restApiSelector";
+import {
+  getLogin,
+  getOuthToken,
+  getUser,
+} from "../../redux/selector/restApiSelector";
 import api from "../../Apiservice/loginSerice";
 import { RestData } from "../../classes/RestData";
 import { actionCreator } from "../../redux/action/actionCreator";
@@ -50,14 +54,18 @@ const options = [
 ];
 
 function Dashboard() {
+  console.log("I am dashboard");
   const [loading, setLoading] = useState(true);
   const [collapse, setCollapse] = useState(false);
   const dispatch = useDispatch();
   const loggedIn = useSelector(getLogin);
+  const userData = useSelector(getUser);
+  console.log(userData);
   const token = getOuthToken();
   let { path, url } = useRouteMatch();
 
   useEffect(() => {
+    console.log("I am called", loading);
     if (loading) {
       let userData = null;
       api
@@ -76,10 +84,11 @@ function Dashboard() {
           dispatch(actionCreator(actions.LOGOUT));
         });
     }
-  }, [dispatch, loading, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (!loggedIn) {
-    return <Redirect to="/login" />;
+  if (Object.keys(userData).length > 0 && !loggedIn) {
+    dispatch(actionCreator(actions.SET_LOGIN, { isLoggedIn: true }));
   }
 
   return loading ? (
@@ -146,10 +155,11 @@ function Dashboard() {
         </Header>
         <Content className="layout-content">
           <Switch>
-            {routes.map((item: any) => (
+            {routes.map((item: any, index: number) => (
               <Route
                 path={`${path}/${item.path}`}
                 render={(props: any) => <item.component {...props} />}
+                key={index}
               />
             ))}
           </Switch>

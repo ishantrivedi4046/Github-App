@@ -8,9 +8,7 @@ const Following = () => {
   const userData: RestData = useSelector(getUser);
   const { following_url } = userData;
   const index = following_url.indexOf("{");
-  // const url = "https://api.github.com/users/gaearon/following";
-  // following_url.substring(0, index)
-  return <Followers type="Following" url={following_url.substring(0, index)} />;
+  return <Followers url={following_url.substring(0, index)} />;
 };
 
 export default Following;
