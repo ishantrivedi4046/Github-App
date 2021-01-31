@@ -1,10 +1,13 @@
+import { LoginReducerKeyTypes } from "../../Util/globalConstants";
 import { actions } from "../action/actions";
 
 const initialState = {
-  isLoggedIn: false,
-  userData: {},
-  searchedUser: {},
-  errorMessage: "",
+  [LoginReducerKeyTypes.IS_LOGGEDIN]: false,
+  [LoginReducerKeyTypes.USERDATA]: {},
+  [LoginReducerKeyTypes.SEARCHED_USER]: {},
+  [LoginReducerKeyTypes.AUTH_LOADING]: false,
+  [LoginReducerKeyTypes.SEARCHED_USER_LOADING]: false,
+  [LoginReducerKeyTypes.SEARCHED_USER_ERROR]: false,
 };
 
 const loginReducer = (
@@ -12,33 +15,10 @@ const loginReducer = (
   action: { type: string; payload: any }
 ) => {
   switch (action.type) {
-    case actions.SET_LOGIN:
+    case actions.SET_LOGIN_STATE:
       return {
-        ...state,
-        isLoggedIn: action.payload.isLoggedIn,
-      };
-    case actions.SET_DATA:
-      return {
-        ...state,
-        userData: action.payload.data,
-      };
-    case actions.LOGOUT:
-      localStorage.clear();
-      return {
-        ...state,
-        isLoggedIn: false,
-        userData: {},
-        errorMessage: "",
-      };
-    case actions.LOGIN_ERROR:
-      return {
-        ...state,
-        errorMessage: action.payload.error,
-      };
-    case actions.SET_SEARCHED_USER_DATA:
-      return {
-        ...state,
-        searchedUser: action.payload.data,
+        ...(state || {}),
+        ...(action.payload || {}),
       };
     default:
       return state;

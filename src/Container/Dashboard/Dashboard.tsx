@@ -1,95 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getLogin,
-  getOuthToken,
-  getUser,
-} from "../../redux/selector/restApiSelector";
-import api from "../../Apiservice/loginSerice";
-import { RestData } from "../../classes/RestData";
-import { actionCreator } from "../../redux/action/actionCreator";
-import { actions } from "../../redux/action/actions";
-import { Redirect, Route, useRouteMatch } from "react-router";
+import { useSelector } from "react-redux";
+import { getUser } from "../../redux/selector/restApiSelector";
+import { Route, useRouteMatch } from "react-router";
 import Spinner from "../../antDesign/Spinner";
 import { Layout, Menu, Typography } from "antd";
-import * as Im from "react-icons/im";
-import * as Go from "react-icons/go";
-import * as Ri from "react-icons/ri";
-import * as Gi from "react-icons/gi";
-import * as Vsc from "react-icons/vsc";
+import { Vsc } from "../../Config/iconConfig";
 import Icon from "@ant-design/icons";
 import { routes } from "../../routes/index";
 import { NavLink, Switch } from "react-router-dom";
+import { SidebarOptions } from "./helper";
 
 const { Sider, Header, Content } = Layout;
-const options = [
-  {
-    icon: Im.ImProfile,
-    desc: "Your Profile",
-  },
-  {
-    icon: Go.GoRepo,
-    desc: "Your Repositories",
-  },
-  {
-    icon: Ri.RiNotificationBadgeFill,
-    desc: "Your Notifications",
-  },
-  {
-    icon: Go.GoGist,
-    desc: "Your Gists",
-  },
-  {
-    icon: Gi.GiShadowFollower,
-    desc: "Your Followers",
-  },
-  {
-    icon: Ri.RiUserFollowFill,
-    desc: "Your Following",
-  },
-  {
-    icon: Gi.GiHouseKeys,
-    desc: "Your SSH Keys",
-  },
-];
 
-function Dashboard() {
-  console.log("I am dashboard");
+const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [collapse, setCollapse] = useState(false);
-  const dispatch = useDispatch();
-  const loggedIn = useSelector(getLogin);
-  const userData = useSelector(getUser);
-  console.log(userData);
-  const token = getOuthToken();
+  const userDataState = useSelector(getUser);
   let { path, url } = useRouteMatch();
 
   useEffect(() => {
-    console.log("I am called", loading);
     if (loading) {
-      let userData = null;
-      api
-        .getAuthenticatedUser(token)
-        .then((res) => {
-          userData = new RestData(res.data);
-          localStorage.removeItem("autherization_initiated");
-          setLoading(false);
-          dispatch(
-            actionCreator(actions.SET_DATA, {
-              data: userData,
-            })
-          );
-        })
-        .catch((error) => {
-          dispatch(actionCreator(actions.LOGOUT));
-        });
+      if (userDataState) {
+        setLoading(false);
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (Object.keys(userData).length > 0 && !loggedIn) {
-    dispatch(actionCreator(actions.SET_LOGIN, { isLoggedIn: true }));
-  }
+  }, [loading, userDataState]);
 
   return loading ? (
     <Spinner size="large" tip="Getting Everything Ready..." />
@@ -100,19 +35,14 @@ function Dashboard() {
         collapsible
         collapsed={collapse}
         onCollapse={(curState) => setCollapse(curState)}
-        style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-        }}
+        className="sider-styles"
         breakpoint="md"
       >
         <div className="sider-logo">
           <Icon component={Vsc.VscGithub} />
         </div>
         <Menu theme="dark" mode="inline" className="sider-menu">
-          {options.map((item: any, index: number) => (
+          {SidebarOptions.map((item: any, index: number) => (
             <Menu.Item
               key={index}
               icon={
@@ -122,7 +52,13 @@ function Dashboard() {
                 />
               }
             >
-              <NavLink to={`${url}/${routes[index].path}`}>{item.desc}</NavLink>
+              {item.desc === "Log Out" ? (
+                <NavLink to="/logout">{item.desc}</NavLink>
+              ) : (
+                <NavLink to={`${url}/${routes[index].path}`}>
+                  {item.desc}
+                </NavLink>
+              )}
             </Menu.Item>
           ))}
         </Menu>
@@ -133,16 +69,7 @@ function Dashboard() {
           transition: "all 200ms ease",
         }}
       >
-        <Header
-          style={{
-            position: "fixed",
-            zIndex: 1,
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            padding: "1rem",
-          }}
-        >
+        <Header className="header-styles">
           <Typography.Title
             level={4}
             style={{
@@ -167,6 +94,6 @@ function Dashboard() {
       </Layout>
     </Layout>
   );
-}
+};
 
 export default Dashboard;

@@ -11,6 +11,7 @@ import DashboardLazy from "./Container/Dashboard/Dashboard.lazy";
 import { useSelector } from "react-redux";
 import { getLogin } from "./redux/selector/restApiSelector";
 import FollowFeatureComponent from "./Components/FollowFeatureComponent";
+import LogoutComponent from "./Components/LogoutComponent";
 
 function App() {
   const login = useSelector(getLogin);
@@ -22,6 +23,7 @@ function App() {
           render={(props) => <DashboardLazy {...props} />}
         />
         <Route path="/login" render={(props) => <LoginLazy {...props} />} />
+        <Route path="/logout" render={(props) => <LogoutComponent />} />
         <Route
           path="/follow"
           render={(props) => <FollowFeatureComponent {...props} />}

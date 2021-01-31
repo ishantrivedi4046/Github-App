@@ -14,23 +14,33 @@ export interface InputProps {
 }
 
 const Input: React.FC<InputProps> = (props) => {
+  const {
+    placeholder,
+    onBlur,
+    onChange,
+    type,
+    name,
+    error,
+    helperText,
+    label,
+  } = props;
   return (
     <div className="input-container">
-      <p className="input-container-label">{props.label}</p>
+      <p className="input-container-label">{label}</p>
       <input
         className="input-container-input"
-        placeholder={props.placeholder}
-        onChange={props.onChange}
-        onBlur={props.onBlur}
-        type={props.type}
-        name={props.name}
+        placeholder={placeholder}
+        onChange={onChange}
+        onBlur={onBlur}
+        type={type}
+        name={name}
       />
       <p
         className={
-          !props.error ? "input-container-helpertext" : "input-container-error"
+          !error ? "input-container-helpertext" : "input-container-error"
         }
       >
-        {props.error ? props.error : props.helperText}
+        {error ? error : helperText}
       </p>
     </div>
   );

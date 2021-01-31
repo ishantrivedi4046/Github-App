@@ -1,7 +1,6 @@
 import { Typography } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import api from "../../Apiservice/loginSerice";
 import { useQuery } from "../../customHooks/useQuery";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
@@ -14,32 +13,18 @@ import logo from "../../assets/img/github-octocat.svg";
 import { useHistory } from "react-router";
 import Spinner from "../../antDesign/Spinner";
 
-const INITIAL_AUTHENTICATION_URL =
-  "https://github.com/login/oauth/authorize?client_id=89d1c63f7c22d1bb7e89&redirect_uri=http://localhost:3000/login&scope=repo%20gist%20notifications%20user";
-
-const Login: React.FC = (props) => {
+const Login: React.FC = () => {
   const dispatch = useDispatch();
   const query = useQuery();
   const history = useHistory();
   const isLoggedIn = useSelector(getLogin);
-  const loading = getAutherizationLoading();
+  const loading = useSelector(getAutherizationLoading);
 
   useEffect(() => {
     const code = query.get("code");
     if (code) {
       window.history.pushState({}, "", constants.REACT_REDIRECT_URI);
-      api
-        .authenticateUser(code)
-        .then((res) => {
-          const token = res.data.split("&")[0].split("=")[1];
-          localStorage.setItem("OUTH_TOKEN", token);
-          dispatch(actionCreator(actions.SET_LOGIN, { isLoggedIn: true }));
-        })
-        .catch((error) => {
-          dispatch(
-            actionCreator(actions.LOGIN_ERROR, { error: error.message })
-          );
-        });
+      dispatch(actionCreator(actions.INITIATE_LOGIN, { code }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -56,16 +41,14 @@ const Login: React.FC = (props) => {
       <Typography.Title level={3} className="form-container-title">
         Sign in to GitHub
       </Typography.Title>
-      <div
+      <a
+        href={constants.INITIAL_AUTHENTICATION_URL}
         className="form-container-link"
-        onClick={() => {
-          localStorage.setItem("autherization_initiated", JSON.stringify(true));
-        }}
       >
-        <a href={INITIAL_AUTHENTICATION_URL}>Sign In</a>
-      </div>
+        Sign In
+      </a>
     </div>
   );
 };
 
-export default Login;
+export default React.memo(Login);

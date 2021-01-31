@@ -7,7 +7,6 @@ interface Props extends RouteProps {}
 
 const FollowFeatureComponent: React.FC<Props> = (props) => {
   const query = useQuery();
-  const authUser = query.get("authUser");
   const url = query.get("url") || "";
   return <Followers url={url} />;
 };

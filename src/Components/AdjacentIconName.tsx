@@ -34,4 +34,4 @@ const AdjacentIconName: React.FC<Props> = (props) => {
   );
 };
 
-export default AdjacentIconName;
+export default React.memo(AdjacentIconName);

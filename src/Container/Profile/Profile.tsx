@@ -3,26 +3,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { RestData } from "../../classes/RestData";
 import AdjacentIconName from "../../Components/AdjacentIconName";
 import {
-  getOuthToken,
   getSearchedUserData,
+  getSearchedUserError,
+  getSearchedUserLoading,
   getUser,
 } from "../../redux/selector/restApiSelector";
-import * as Vsc from "react-icons/vsc";
-import * as Ti from "react-icons/ti";
-import * as Im from "react-icons/im";
-import * as Hi from "react-icons/hi";
-import * as Md from "react-icons/md";
+import { Ti, Md } from "../../Config/iconConfig";
 import ChartComponent from "../../Components/ChartComponent";
 import { Button, Radio, Typography } from "antd";
 import Search from "antd/lib/input/Search";
-import api from "../../Apiservice/loginSerice";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
 import Spinner from "../../antDesign/Spinner";
 import Icons from "../../Util/Icons";
-
-const chartOptions = { "1": "LINE", "2": "BAR", "3": "AREA" };
-export const PROFILE_CHART_COLOR = "#1890ff";
+import { LoginReducerKeyTypes, RestApiTypes } from "../../Util/globalConstants";
+import {
+  chartOptions,
+  getData,
+  getGeneralInfo,
+  PROFILE_CHART_COLOR,
+} from "./helper";
 
 interface ProfileProps {
   propsUserName?: string;
@@ -34,15 +34,17 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
   const [radioValue, setRadioValue] = useState<"1" | "2" | "3">("1");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(propsUserName || "");
 
   const selectorFunction = value ? getSearchedUserData : getUser;
-  const userData: any = useSelector(selectorFunction);
+  const userData: RestData = useSelector(selectorFunction);
+  const searchedUserLoadingState = useSelector(getSearchedUserLoading);
   const searchedUser = useSelector(getSearchedUserData);
+  const searchedUserError = useSelector(getSearchedUserError);
   const authUser = useSelector(getUser);
   const dispatch = useDispatch();
 
-  const { profileImage, userBio, userName, realName, location } = userData;
+  const { profileImage, userBio, userName } = userData;
 
   useEffect(() => {
     if (propsUserName) {
@@ -51,54 +53,32 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsUserName]);
 
-  const data = [
-    { name: "Public Repo", Count: userData.publicRepos },
-    { name: "Private Repo", Count: userData.privateRepos },
-    { name: "Public Gists", Count: userData.publicGists },
-    { name: "Private Gists", Count: userData.privateGists },
-    { name: "Followers", Count: userData.userFollowers },
-    { name: "Following", Count: userData.userFollowing },
-    { name: "Collaborators", Count: userData.collaborators },
-  ].filter((item) => item.Count !== -1);
-
-  let generalInfo = [
-    {
-      icon: Vsc.VscSymbolNamespace,
-      content: realName,
-    },
-    { icon: Ti.TiLocation, content: location },
-    { icon: Im.ImBlog, content: userData.userBlog },
-    { icon: Hi.HiOutlineMail, content: userData.userEmail },
-    { icon: Im.ImTwitter, content: userData.twitterHandle },
-    { icon: Hi.HiOfficeBuilding, content: userData.userCompany },
-  ];
-  generalInfo = generalInfo.filter((info) => !(info.content === null));
+  useEffect(() => {
+    if (loading) {
+      if (searchedUserLoadingState === false) {
+        setLoading(false);
+        if (searchedUserError === true) {
+          setError("error");
+        }
+      }
+    }
+  }, [searchedUserLoadingState, loading, searchedUserError]);
 
   const handleSearch = (value: any) => {
     setLoading(true);
     setValue(value);
     if (value) {
-      api
-        .getSearchedUser(value, getOuthToken())
-        .then((res) => {
-          const searchedData = new RestData(res.data);
-          setLoading(false);
-          setError("");
-          dispatch(
-            actionCreator(actions.SET_SEARCHED_USER_DATA, {
-              data: searchedData,
-            })
-          );
+      dispatch(
+        actionCreator(actions.RESTAPI_READ, {
+          type: RestApiTypes.SEARCHED_USER_GET,
+          value,
         })
-        .catch((error) => {
-          setLoading(false);
-          setError(error.message);
-        });
+      );
     } else {
       setLoading(false);
       dispatch(
-        actionCreator(actions.SET_SEARCHED_USER_DATA, {
-          data: {},
+        actionCreator(actions.SET_LOGIN_STATE, {
+          [LoginReducerKeyTypes.SEARCHED_USER]: {},
         })
       );
     }
@@ -106,10 +86,9 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
 
   const handleButtonClick = () => {
     setValue("");
-    setError("");
     dispatch(
-      actionCreator(actions.SET_SEARCHED_USER_DATA, {
-        data: {},
+      actionCreator(actions.SET_LOGIN_STATE, {
+        [LoginReducerKeyTypes.SEARCHED_USER]: {},
       })
     );
   };
@@ -189,7 +168,7 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
               />
               <div className="titles">
                 <div className="titles-1">{userName}</div>
-                {generalInfo.map((info, index) => (
+                {(getGeneralInfo(userData) || {}).map((info, index) => (
                   <AdjacentIconName
                     value={info.icon}
                     content={info.content ? info.content : "No Data"}
@@ -247,7 +226,7 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
                   </Radio.Group>
                 </div>
                 <ChartComponent
-                  data={data}
+                  data={getData(userData)}
                   Chart={chartOptions[radioValue]}
                   xDataKey="name"
                   yDataKey="Count"

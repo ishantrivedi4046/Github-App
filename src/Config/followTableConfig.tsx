@@ -1,6 +1,6 @@
 import { Button, Typography } from "antd";
 import React from "react";
-import { PROFILE_CHART_COLOR } from "../Container/Profile/Profile";
+import { PROFILE_CHART_COLOR } from "../Container/Profile/helper";
 
 export const getFollowColumns = (func: any) => {
   return [

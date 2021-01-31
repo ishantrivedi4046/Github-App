@@ -1,8 +1,6 @@
-export const actions = {
-  SET_LOGIN: "SET_LOGIN",
-  SET_DATA: "SET_DATA",
-  LOGOUT: "LOGOUT",
-  LOGIN_ERROR: "ERROR",
-  SET_SEARCHED_USER_DATA: "SEARCHED_USER_DATA",
-  SET_FOLLOWERS_LIST: "SET_FOLLOWERS_LIST",
-};
+export enum actions {
+  INITIATE_LOGIN = "start_login",
+  SET_LOGIN_STATE = "setLoginState",
+  SET_FOLLOWERS_STATE = "setFollowerList",
+  RESTAPI_READ = "restapi_read",
+}

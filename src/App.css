@@ -149,3 +149,18 @@ html {
 
 .detailContainerStyle {
   margin-bottom: 0.8rem; }
+
+.sider-styles {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0; }
+
+.header-styles {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem; }

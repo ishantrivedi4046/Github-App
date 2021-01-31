@@ -1,7 +1,9 @@
+import { FollowReducerKeyTypes } from "../../Util/globalConstants";
 import { actions } from "../action/actions";
 
 const initialState = {
-  followersList: [],
+  [FollowReducerKeyTypes.FOLLOWERLS_LIST]: [],
+  [FollowReducerKeyTypes.FOLLOW_LOADING]: false,
 };
 
 const followReducer = (
@@ -9,10 +11,10 @@ const followReducer = (
   action: { type: string; payload: any }
 ) => {
   switch (action.type) {
-    case actions.SET_FOLLOWERS_LIST:
+    case actions.SET_FOLLOWERS_STATE:
       return {
-        ...state,
-        followersList: action.payload.data,
+        ...(state || {}),
+        ...(action.payload || {}),
       };
     default:
       return state;

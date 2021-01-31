@@ -1,33 +1,7 @@
 import { get } from "lodash";
 
 export class RestData {
-  username = "";
-  node_id = "";
-  avatar_url = "";
-  followers_url = "";
-  following_url = "";
-  gists_url = "";
-  subscriptions_url = "";
-  organizations_url = "";
-  repos_url = "";
-  events_url = "";
-  name = "";
-  blog = "";
-  location = "";
-  bio = "";
-  publicRepos = 0;
-  publicGists = 0;
-  followers = 0;
-  following = 0;
-  privateGists = 0;
-  privateRepos = 0;
-  collaborators = 0;
-  twoFactor = false;
-  email = null;
-  hirable = null;
-  twitterName = null;
-  company = null;
-
+  [x: string]: any;
   constructor(data: any = {}) {
     if (data) {
       this.username = data.login;

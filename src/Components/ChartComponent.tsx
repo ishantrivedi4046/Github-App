@@ -112,4 +112,4 @@ const ChartComponent: React.FC<ChartProps> = (props: ChartProps) => {
   return chart;
 };
 
-export default ChartComponent;
+export default React.memo(ChartComponent);
