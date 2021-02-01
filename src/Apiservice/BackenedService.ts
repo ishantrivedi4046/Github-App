@@ -2,7 +2,7 @@ import axios from "axios";
 import { getOuthToken } from "../redux/selector/restApiSelector";
 
 class BackenedService {
-  [x: string]: any;
+  token = "";
   constructor() {
     this.token = getOuthToken();
   }
@@ -10,13 +10,13 @@ class BackenedService {
   getSearchedUser = (value: any) => {
     const url = `https://api.github.com/users/${value}`;
     return axios.get(url, {
-      headers: { Authorization: "token " + this.token },
+      headers: { Authorization: "token " + getOuthToken() },
     });
   };
 
   getAuthUserdataList = (url: string) => {
     return axios.get(url, {
-      headers: { Authorization: "token " + this.token },
+      headers: { Authorization: "token " + getOuthToken() },
     });
   };
 }

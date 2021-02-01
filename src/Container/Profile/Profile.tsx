@@ -86,8 +86,10 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
 
   const handleButtonClick = () => {
     setValue("");
+    setError("");
     dispatch(
       actionCreator(actions.SET_LOGIN_STATE, {
+        [LoginReducerKeyTypes.SEARCHED_USER_ERROR]: false,
         [LoginReducerKeyTypes.SEARCHED_USER]: {},
       })
     );

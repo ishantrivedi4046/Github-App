@@ -11,7 +11,8 @@ import { RestData } from "../../classes/RestData";
 import { actionCreator } from "../action/actionCreator";
 
 export function* restapiEffectSaga(action: any) {
-  const { type, payload } = action;
+  const { payload } = action;
+  const { type } = payload;
   switch (type) {
     case RestApiTypes.FOLLOW_LIST:
       const { url } = payload;
@@ -64,6 +65,7 @@ export function* restapiEffectSaga(action: any) {
           })
         );
       }
+      break;
   }
 }
 
