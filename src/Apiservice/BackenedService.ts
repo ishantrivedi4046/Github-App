@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getOuthToken } from "../redux/selector/restApiSelector";
+import { constants } from "../Util/globalConstants";
 
 class BackenedService {
   token = "";
@@ -16,6 +17,20 @@ class BackenedService {
 
   getAuthUserdataList = (url: string) => {
     return axios.get(url, {
+      headers: { Authorization: "token " + getOuthToken() },
+    });
+  };
+
+  followUserService = (name: any) => {
+    const url = `${constants.BASE_FOLLOW_UNFOLLOW_URL}${name}`;
+    return axios.put(url, null, {
+      headers: { Authorization: "token " + getOuthToken() },
+    });
+  };
+
+  unfollowUserService = (name: any) => {
+    const url = `${constants.BASE_FOLLOW_UNFOLLOW_URL}${name}`;
+    return axios.delete(url, {
       headers: { Authorization: "token " + getOuthToken() },
     });
   };

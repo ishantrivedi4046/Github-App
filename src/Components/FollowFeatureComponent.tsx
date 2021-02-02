@@ -8,7 +8,9 @@ interface Props extends RouteProps {}
 const FollowFeatureComponent: React.FC<Props> = (props) => {
   const query = useQuery();
   const url = query.get("url") || "";
-  return <Followers url={url} />;
+  const type = query.get("type") || "";
+  const parentUrl = query.get("parentUrl") || "";
+  return <Followers url={url} type={type} parentUrl={parentUrl} />;
 };
 
 export default FollowFeatureComponent;

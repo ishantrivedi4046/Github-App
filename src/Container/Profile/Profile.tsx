@@ -16,7 +16,11 @@ import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
 import Spinner from "../../antDesign/Spinner";
 import Icons from "../../Util/Icons";
-import { LoginReducerKeyTypes, RestApiTypes } from "../../Util/globalConstants";
+import {
+  constants,
+  LoginReducerKeyTypes,
+  RestApiTypes,
+} from "../../Util/globalConstants";
 import {
   chartOptions,
   getData,
@@ -27,9 +31,16 @@ import {
 interface ProfileProps {
   propsUserName?: string;
   search?: boolean;
+  parentUrl?: string;
+  setDisable?: () => void;
 }
 
-const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
+const Profile: React.FC<ProfileProps> = ({
+  propsUserName,
+  search,
+  parentUrl,
+  setDisable,
+}) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [radioValue, setRadioValue] = useState<"1" | "2" | "3">("1");
   const [loading, setLoading] = useState<boolean>(false);
@@ -41,7 +52,6 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
   const searchedUserLoadingState = useSelector(getSearchedUserLoading);
   const searchedUser = useSelector(getSearchedUserData);
   const searchedUserError = useSelector(getSearchedUserError);
-  const authUser = useSelector(getUser);
   const dispatch = useDispatch();
 
   const { profileImage, userBio, userName } = userData;
@@ -95,16 +105,19 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
     );
   };
 
-  const handleFollowFeature = (type: string) => {
+  const handleFollowFeature = (
+    type: constants.FOLLOWER | constants.FOLLOWING
+  ) => {
     let url =
-      type === "Followers"
+      type === constants.FOLLOWER
         ? searchedUser.followers_url
         : searchedUser.following_url;
-    if (type === "Following") {
+    if (type === constants.FOLLOWING) {
       const index = url.indexOf("{");
       url = url.substring(0, index);
     }
-    window.open(`/follow?url=${url}&authUser=${authUser.userName}`);
+    setDisable?.();
+    window.open(`/follow?url=${url}&type=${type}&parentUrl=${parentUrl}`);
   };
 
   return loading ? (
@@ -186,7 +199,7 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
               <>
                 <Button
                   type="primary"
-                  onClick={() => handleFollowFeature("Followers")}
+                  onClick={() => handleFollowFeature(constants.FOLLOWER)}
                   style={{ marginRight: "1rem" }}
                   size="small"
                 >
@@ -194,7 +207,7 @@ const Profile: React.FC<ProfileProps> = ({ propsUserName, search }) => {
                 </Button>
                 <Button
                   type="primary"
-                  onClick={() => handleFollowFeature("Following")}
+                  onClick={() => handleFollowFeature(constants.FOLLOWING)}
                   size="small"
                 >
                   Following

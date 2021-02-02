@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import {
   FollowReducerKeyTypes,
   LoginReducerKeyTypes,
@@ -15,7 +15,7 @@ export function* restapiEffectSaga(action: any) {
   const { type } = payload;
   switch (type) {
     case RestApiTypes.FOLLOW_LIST:
-      const { url } = payload;
+      const { url, extra } = payload;
       try {
         yield put(
           actionCreator(actions.SET_FOLLOWERS_STATE, {
@@ -24,9 +24,21 @@ export function* restapiEffectSaga(action: any) {
         );
         const res = yield call(objBackened.getAuthUserdataList, url);
         const listData = res.data.map((item: any) => new RestData(item));
+        if (extra) {
+          yield put(
+            actionCreator(actions.SET_LOGIN_STATE, {
+              [LoginReducerKeyTypes.AUTH_USER_FOLLOWING_LIST]: listData,
+            })
+          );
+        } else {
+          yield put(
+            actionCreator(actions.SET_FOLLOWERS_STATE, {
+              [FollowReducerKeyTypes.FOLLOWERLS_LIST]: listData,
+            })
+          );
+        }
         yield put(
           actionCreator(actions.SET_FOLLOWERS_STATE, {
-            [FollowReducerKeyTypes.FOLLOWERLS_LIST]: listData,
             [FollowReducerKeyTypes.FOLLOW_LOADING]: false,
           })
         );
@@ -66,9 +78,19 @@ export function* restapiEffectSaga(action: any) {
         );
       }
       break;
+    case RestApiTypes.FOLLOW:
+      const { name } = payload;
+      const res = yield call(objBackened.followUserService, name);
+      console.log("[follow res]", res);
+      break;
+    case RestApiTypes.UNFOLLOW:
+      const { name: apiName } = payload;
+      const result = yield call(objBackened.unfollowUserService, apiName);
+      console.log("[unfollow res]", result);
+      break;
   }
 }
 
 export function* restapiWatcher() {
-  yield takeLatest(actions.RESTAPI_READ, restapiEffectSaga);
+  yield takeEvery(actions.RESTAPI_READ, restapiEffectSaga);
 }

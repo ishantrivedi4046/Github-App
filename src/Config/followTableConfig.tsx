@@ -1,11 +1,17 @@
-import { Button, Typography } from "antd";
+import { Typography } from "antd";
 import React from "react";
 import { PROFILE_CHART_COLOR } from "../Container/Profile/helper";
+import TableActionComponent from "../Components/TableActionComponent";
+import { capitalize } from "lodash";
 
-export const getFollowColumns = (func: any) => {
+export const getFollowColumns = (
+  func: any,
+  handleFollowUnFollow: any,
+  dataList: any
+) => {
   return [
     {
-      title: "AVATAR",
+      title: capitalize("avatar"),
       dataIndex: "avatar_url",
       key: "avatar_url",
       width: "10%",
@@ -23,7 +29,7 @@ export const getFollowColumns = (func: any) => {
       ),
     },
     {
-      title: "GITHUB USERNAME",
+      title: capitalize("github Username"),
       dataIndex: "username",
       key: "username",
       render: (text: any, record: any, index: number) => (
@@ -35,13 +41,16 @@ export const getFollowColumns = (func: any) => {
       ),
     },
     {
-      title: "ACTION",
+      title: capitalize("actions"),
       dataIndex: "action",
       key: "action",
       render: (text: any, record: any, index: number) => (
-        <Button danger type="link" onClick={() => func(record)}>
-          View Profile
-        </Button>
+        <TableActionComponent
+          record={record}
+          func={func}
+          handleFollowUnFollow={handleFollowUnFollow}
+          dataList={dataList}
+        />
       ),
     },
   ];

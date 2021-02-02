@@ -1,13 +1,16 @@
-import { Button, Table } from "antd";
+import { Button } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../antDesign/Spinner";
 import { RestData } from "../../classes/RestData";
+import CustomTableComponent from "../../Components/CustomTableComponent";
 import { getFollowColumns } from "../../Config/followTableConfig";
+import { chopFollowingUrl } from "../../Config/helper";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
 import {
+  getAuthUserFollowingList,
   getFollowersList,
   getFollowListLoading,
   getUser,
@@ -18,14 +21,17 @@ import Profile from "../Profile/Profile";
 interface FollowersProps {
   url?: string;
   type?: string;
+  parentUrl?: string;
 }
 
 const Followers: React.FC<FollowersProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
+  const [disable, setDisabled] = useState<boolean>(true);
   const currentUserData: RestData = useSelector(getUser);
   const [searchedValue, setSearchedValue] = useState("");
   const followersList = useSelector(getFollowersList);
+  const authFollowingList = useSelector(getAuthUserFollowingList);
   const followListLoadingState = useSelector(getFollowListLoading);
   const dispatch = useDispatch();
   const URL = props.url ? props.url : currentUserData?.followersUrl;
@@ -49,7 +55,26 @@ const Followers: React.FC<FollowersProps> = (props) => {
     setSearchedValue(record.username);
   };
 
+  const handleFollowUnfollow = (name: any, type: "follow" | "unfollow") => {
+    setDisabled(false);
+    dispatch(
+      actionCreator(actions.RESTAPI_READ, {
+        type: type === "follow" ? RestApiTypes.FOLLOW : RestApiTypes.UNFOLLOW,
+        name,
+      })
+    );
+  };
+
   useEffect(() => {
+    if (props.parentUrl) {
+      dispatch(
+        actionCreator(actions.RESTAPI_READ, {
+          type: RestApiTypes.FOLLOW_LIST,
+          url: props.parentUrl,
+          extra: true,
+        })
+      );
+    }
     dispatch(
       actionCreator(actions.RESTAPI_READ, {
         type: RestApiTypes.FOLLOW_LIST,
@@ -57,7 +82,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [URL]);
+  }, [URL, props.parentUrl]);
 
   useEffect(() => {
     if (loading) {
@@ -73,6 +98,29 @@ const Followers: React.FC<FollowersProps> = (props) => {
     dispatch(
       actionCreator(actions.SET_LOGIN_STATE, {
         [LoginReducerKeyTypes.SEARCHED_USER]: {},
+      })
+    );
+  };
+
+  const _column = getFollowColumns(
+    handleViewProfile,
+    handleFollowUnfollow,
+    authFollowingList || []
+  );
+
+  const handleRefresh = () => {
+    setLoading(true);
+    dispatch(
+      actionCreator(actions.RESTAPI_READ, {
+        type: RestApiTypes.FOLLOW_LIST,
+        url: props.parentUrl || chopFollowingUrl(currentUserData.followingUrl),
+        extra: true,
+      })
+    );
+    dispatch(
+      actionCreator(actions.RESTAPI_READ, {
+        type: RestApiTypes.FOLLOW_LIST,
+        url: URL,
       })
     );
   };
@@ -93,13 +141,21 @@ const Followers: React.FC<FollowersProps> = (props) => {
         destroyOnClose
         style={{ minWidth: "78rem" }}
       >
-        <Profile search={false} propsUserName={searchedValue} />
+        <Profile
+          setDisable={() => setDisabled(false)}
+          search={false}
+          propsUserName={searchedValue}
+          parentUrl={
+            props.parentUrl || chopFollowingUrl(currentUserData.followingUrl)
+          }
+        />
       </Modal>
-      <Table
-        columns={getFollowColumns(handleViewProfile)}
+      <CustomTableComponent
+        disable={disable}
+        type={props.type || ""}
+        handleRefresh={handleRefresh}
+        columns={_column}
         dataSource={dataSource.length === 0 ? fakeData : dataSource}
-        style={{ margin: "2rem" }}
-        pagination={{}}
       />
     </>
   );

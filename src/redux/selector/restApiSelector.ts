@@ -28,6 +28,14 @@ export const getSearchedUserError = (state: any) => {
   );
 };
 
+export const getAuthUserFollowingList = (state: any) => {
+  return get(
+    state.loginReducer,
+    [LoginReducerKeyTypes.AUTH_USER_FOLLOWING_LIST],
+    []
+  );
+};
+
 export const getSearchedUserLoading = (state: any) => {
   return get(
     state.loginReducer,
