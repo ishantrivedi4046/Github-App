@@ -1,5 +1,6 @@
 import axios from "axios";
 import { constants } from "../Util/globalConstants";
+import { restInstance } from "./restService";
 
 class LoginService {
   constructor() {
@@ -12,8 +13,8 @@ class LoginService {
   };
 
   getAuthenticatedUser = (token: string) => {
-    const userUrl = `${constants.REACT_APP_BASE_URL}/user`;
-    return axios.get(userUrl, { headers: { Authorization: "token " + token } });
+    const userUrl = `/user`;
+    return restInstance.get(userUrl);
   };
 }
 

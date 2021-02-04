@@ -1,5 +1,6 @@
-import axios from "axios";
 import { getOuthToken } from "../redux/selector/restApiSelector";
+import { USERS } from "./constants/restConstants";
+import { restInstance } from "./restService";
 
 class BackenedService {
   token = "";
@@ -8,16 +9,14 @@ class BackenedService {
   }
 
   getSearchedUser = (value: any) => {
-    const url = `https://api.github.com/users/${value}`;
-    return axios.get(url, {
-      headers: { Authorization: "token " + getOuthToken() },
-    });
+    const url = `${USERS}/${value}`.toString();
+    return restInstance.get(url);
   };
 
   getAuthUserdataList = (url: string) => {
-    return axios.get(url, {
-      headers: { Authorization: "token " + getOuthToken() },
-    });
+    const index = url.indexOf(USERS);
+    const partial_url = url.substring(index);
+    return restInstance(partial_url);
   };
 }
 export const objBackened = new BackenedService();
