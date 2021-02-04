@@ -164,3 +164,19 @@ html {
   justify-content: space-between;
   align-items: center;
   padding: 1rem; }
+
+.custom-table {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2rem;
+  color: aqua; }
+  .custom-table-title {
+    padding: 1rem;
+    text-align: left;
+    width: 100%; }
+  .custom-table-content {
+    padding: 2rem;
+    border: 0.35px solid #1890ff;
+    border-radius: 1rem; }

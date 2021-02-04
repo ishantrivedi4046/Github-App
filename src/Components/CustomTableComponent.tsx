@@ -14,24 +14,20 @@ const CustomTableComponent: React.FC<CustomTableComponentProps> = ({
   dataSource,
 }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignContent: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
-    >
-      <div style={{ textAlign: "left", width: "100%" }}>
-        <Typography.Title level={2}>{`User ${capitalize(
+    <div className="custom-table">
+      <div className="custom-table-title">
+        <Typography.Title level={3} style={{ color: "#083263" }}>{`${capitalize(
           type
-        )}`}</Typography.Title>
+        )} Table`}</Typography.Title>
       </div>
       <Table
+        className="custom-table-content"
         size="small"
         columns={columns}
         dataSource={dataSource}
-        style={{ margin: "2rem" }}
+        pagination={
+          dataSource.length > 10 ? { position: ["bottomRight"] } : false
+        }
       />
     </div>
   );

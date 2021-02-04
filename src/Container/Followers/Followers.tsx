@@ -44,11 +44,13 @@ const Followers: React.FC<FollowersProps> = (props) => {
     },
   ];
 
-  const dataSource = followersList.map((item: RestData, index: number) => ({
-    avatar_url: item.profileImage,
-    username: item.username,
-    key: index,
-  }));
+  const dataSource = (followersList || []).map(
+    (item: RestData, index: number) => ({
+      avatar_url: item.profileImage,
+      username: item.username,
+      key: index,
+    })
+  );
 
   const handleViewProfile = (record: any) => {
     setVisible(true);
@@ -144,9 +146,9 @@ const Followers: React.FC<FollowersProps> = (props) => {
         />
       </Modal>
       <CustomTableComponent
-        type={props.type || ""}
+        type={props.type || "Followers"}
         columns={_column}
-        dataSource={dataSource.length === 0 ? fakeData : dataSource}
+        dataSource={(dataSource || []).length === 0 ? fakeData : dataSource}
       />
     </>
   );

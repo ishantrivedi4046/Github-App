@@ -1,0 +1,19 @@
+.custom-table {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2rem;
+
+  &-title {
+    padding: 1rem;
+    text-align: left;
+    width: 100%;
+  }
+
+  &-content {
+    padding: 2rem;
+    border: 0.35px solid $color-tertiary;
+    border-radius: 1rem;
+  }
+}

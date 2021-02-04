@@ -1,16 +1,7 @@
 @import "antd/dist/antd.css";
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 
-// variables for colors
-$color-primary: #05264c;
-$color-secondary: #083263;
-$color-tertiary: #1890ff;
-$color-button-border: #1ad4d4;
-$color-white: #fff;
-$color-input: #fffcc8;
-
-//variables for parameters
-$media-width: 32rem;
+@import "helper";
 
 * {
   margin: 0;
@@ -205,3 +196,5 @@ html {
   align-items: center;
   padding: 1rem;
 }
+
+@import "table";

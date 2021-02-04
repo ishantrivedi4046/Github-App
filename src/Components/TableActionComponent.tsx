@@ -59,7 +59,7 @@ const TableActionComponent: React.FC<TableActionComponentProps> = ({
           disabled={disable}
           style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}
         >
-          <Icon component={Ri.RiUserFollowFill} />
+          <Icon component={Ri.RiUserFollowFill} style={{ color: "green" }} />
         </Button>
       </Tooltip>
       <Tooltip title="Un-Follow">
@@ -67,7 +67,7 @@ const TableActionComponent: React.FC<TableActionComponentProps> = ({
           disabled={!disable}
           onClick={() => handleFollowFeature("unfollow")}
         >
-          <Icon component={Ri.RiUserUnfollowFill} />
+          <Icon component={Ri.RiUserUnfollowFill} style={{ color: "red" }} />
         </Button>
       </Tooltip>
     </div>
