@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import Modal from "antd/lib/modal/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../antDesign/Spinner";
 import { RestData } from "../../classes/RestData";
@@ -22,12 +22,12 @@ interface FollowersProps {
   url?: string;
   type?: string;
   parentUrl?: string;
+  showRefresh?: boolean;
 }
 
 const Followers: React.FC<FollowersProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
-  const [disable, setDisabled] = useState<boolean>(true);
   const currentUserData: RestData = useSelector(getUser);
   const [searchedValue, setSearchedValue] = useState("");
   const followersList = useSelector(getFollowersList);
@@ -55,34 +55,23 @@ const Followers: React.FC<FollowersProps> = (props) => {
     setSearchedValue(record.username);
   };
 
-  const handleFollowUnfollow = (name: any, type: "follow" | "unfollow") => {
-    setDisabled(false);
-    dispatch(
-      actionCreator(actions.RESTAPI_READ, {
-        type: type === "follow" ? RestApiTypes.FOLLOW : RestApiTypes.UNFOLLOW,
-        name,
-      })
-    );
-  };
-
-  useEffect(() => {
-    if (props.parentUrl) {
+  const handleFollowUnfollow = useCallback(
+    (name: any, type: "follow" | "unfollow") => {
       dispatch(
         actionCreator(actions.RESTAPI_READ, {
-          type: RestApiTypes.FOLLOW_LIST,
-          url: props.parentUrl,
-          extra: true,
+          type: type === "follow" ? RestApiTypes.FOLLOW : RestApiTypes.UNFOLLOW,
+          name,
         })
       );
-    }
-    dispatch(
-      actionCreator(actions.RESTAPI_READ, {
-        type: RestApiTypes.FOLLOW_LIST,
-        url: URL,
-      })
-    );
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [URL, props.parentUrl]);
+    []
+  );
+
+  useEffect(() => {
+    handleRefresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (loading) {
@@ -93,6 +82,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
   }, [followListLoadingState, loading]);
 
   const handleModalClose = () => {
+    handleRefresh();
     setVisible(false);
     setSearchedValue("");
     dispatch(
@@ -102,10 +92,14 @@ const Followers: React.FC<FollowersProps> = (props) => {
     );
   };
 
-  const _column = getFollowColumns(
-    handleViewProfile,
-    handleFollowUnfollow,
-    authFollowingList || []
+  const _column = useMemo(
+    () =>
+      getFollowColumns(
+        handleViewProfile,
+        handleFollowUnfollow,
+        authFollowingList || []
+      ),
+    [authFollowingList, handleFollowUnfollow]
   );
 
   const handleRefresh = () => {
@@ -142,7 +136,6 @@ const Followers: React.FC<FollowersProps> = (props) => {
         style={{ minWidth: "78rem" }}
       >
         <Profile
-          setDisable={() => setDisabled(false)}
           search={false}
           propsUserName={searchedValue}
           parentUrl={
@@ -151,9 +144,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
         />
       </Modal>
       <CustomTableComponent
-        disable={disable}
         type={props.type || ""}
-        handleRefresh={handleRefresh}
         columns={_column}
         dataSource={dataSource.length === 0 ? fakeData : dataSource}
       />

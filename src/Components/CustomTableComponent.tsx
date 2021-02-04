@@ -1,4 +1,4 @@
-import { Button, Table, Typography } from "antd";
+import { Table, Typography } from "antd";
 import { capitalize } from "lodash";
 import React from "react";
 
@@ -6,16 +6,12 @@ interface CustomTableComponentProps {
   type: string;
   columns: any;
   dataSource: any;
-  handleRefresh: () => void;
-  disable: boolean;
 }
 
 const CustomTableComponent: React.FC<CustomTableComponentProps> = ({
   type,
   columns,
   dataSource,
-  disable,
-  handleRefresh,
 }) => {
   return (
     <div
@@ -26,17 +22,10 @@ const CustomTableComponent: React.FC<CustomTableComponentProps> = ({
         flexDirection: "column",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignContent: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography.Title title={`User ${capitalize(type)}`}></Typography.Title>
-        <Button type="primary" onClick={handleRefresh} disabled={disable}>
-          Refresh
-        </Button>
+      <div style={{ textAlign: "left", width: "100%" }}>
+        <Typography.Title level={2}>{`User ${capitalize(
+          type
+        )}`}</Typography.Title>
       </div>
       <Table
         size="small"

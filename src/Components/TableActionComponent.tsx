@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Icon from "@ant-design/icons";
 import { Ri, Md } from "../Config/iconConfig";
 import { checkFollowDisable } from "../Config/helper";
-import { cloneDeep } from "lodash";
+import { cloneDeep, debounce } from "lodash";
 import { RestData } from "../classes/RestData";
 
 interface TableActionComponentProps {
@@ -23,6 +23,7 @@ const TableActionComponent: React.FC<TableActionComponentProps> = ({
     checkFollowDisable(record.username || "", dataList || [])
   );
   const [authList, setAuthList] = useState<any[]>(dataList || []);
+  const debounceFollowUnFollow = debounce(handleFollowUnFollow, 300);
 
   const handleFollowFeature = (type: "follow" | "unfollow") => {
     let newDataList: any = [];
@@ -31,12 +32,12 @@ const TableActionComponent: React.FC<TableActionComponentProps> = ({
       newDataList.push(record);
     } else {
       newDataList = authList.filter(
-        (crecord: RestData) => crecord.userName !== record.username
+        (crecord: RestData) => crecord.username !== record.username
       );
     }
     setDisable(checkFollowDisable(record.username || "", newDataList));
     setAuthList(newDataList);
-    handleFollowUnFollow(record.username, type);
+    debounceFollowUnFollow(record.username, type);
   };
 
   return (

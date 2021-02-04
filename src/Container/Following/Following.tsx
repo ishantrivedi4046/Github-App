@@ -12,6 +12,7 @@ const Following = () => {
     <Followers
       url={userData.followingUrl.substring(0, index)}
       type={constants.FOLLOWING}
+      showRefresh={true}
     />
   );
 };

@@ -32,14 +32,12 @@ interface ProfileProps {
   propsUserName?: string;
   search?: boolean;
   parentUrl?: string;
-  setDisable?: () => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({
   propsUserName,
   search,
   parentUrl,
-  setDisable,
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [radioValue, setRadioValue] = useState<"1" | "2" | "3">("1");
@@ -77,6 +75,7 @@ const Profile: React.FC<ProfileProps> = ({
   const handleSearch = (value: any) => {
     setLoading(true);
     setValue(value);
+    setError("");
     if (value) {
       dispatch(
         actionCreator(actions.RESTAPI_READ, {
@@ -94,7 +93,7 @@ const Profile: React.FC<ProfileProps> = ({
     }
   };
 
-  const handleButtonClick = () => {
+  const handleGoBackButtonClick = () => {
     setValue("");
     setError("");
     dispatch(
@@ -116,7 +115,6 @@ const Profile: React.FC<ProfileProps> = ({
       const index = url.indexOf("{");
       url = url.substring(0, index);
     }
-    setDisable?.();
     window.open(`/follow?url=${url}&type=${type}&parentUrl=${parentUrl}`);
   };
 
@@ -129,7 +127,7 @@ const Profile: React.FC<ProfileProps> = ({
           <Button
             type="primary"
             size="large"
-            onClick={handleButtonClick}
+            onClick={handleGoBackButtonClick}
             icon={<Icons Value={Md.MdArrowBack} className="goBack" />}
             shape="circle"
             disabled={Object.keys(searchedUser).length === 0 && error === ""}
