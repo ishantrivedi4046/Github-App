@@ -52,3 +52,15 @@ export const getAutherizationLoading = (state: any) => {
 export const getFollowersList = (state: any) => {
   return get(state.followReducer, [FollowReducerKeyTypes.FOLLOWERLS_LIST], []);
 };
+
+export const getSShKeyListState = (state: any) => {
+  return get(state.loginReducer, [LoginReducerKeyTypes.AUTH_USER_SSH_KEYS], []);
+};
+
+export const getSShKeyListStateLoading = (state: any) => {
+  return get(
+    state.loginReducer,
+    [LoginReducerKeyTypes.AUTH_USER_SSH_LOADING],
+    true
+  );
+};

@@ -9,6 +9,7 @@ import { actions } from "../action/actions";
 import { objBackened } from "../../Apiservice/BackenedService";
 import { RestData } from "../../classes/RestData";
 import { actionCreator } from "../action/actionCreator";
+import { get } from "lodash";
 
 export function* restapiEffectSaga(action: any) {
   const { payload } = action;
@@ -80,13 +81,35 @@ export function* restapiEffectSaga(action: any) {
       break;
     case RestApiTypes.FOLLOW:
       const { name } = payload;
-      const res = yield call(objBackened.followUserService, name);
-      console.log("[follow res]", res);
+      yield call(objBackened.followUserService, name);
       break;
     case RestApiTypes.UNFOLLOW:
       const { name: apiName } = payload;
-      const result = yield call(objBackened.unfollowUserService, apiName);
-      console.log("[unfollow res]", result);
+      yield call(objBackened.unfollowUserService, apiName);
+      break;
+    case RestApiTypes.LIST_SSH:
+      yield put(
+        actionCreator(actions.SET_LOGIN_STATE, {
+          [LoginReducerKeyTypes.AUTH_USER_SSH_LOADING]: true,
+        })
+      );
+      const apiData = yield call(objBackened.listSSHKeys);
+      yield put(
+        actionCreator(actions.SET_LOGIN_STATE, {
+          [LoginReducerKeyTypes.AUTH_USER_SSH_LOADING]: false,
+          [LoginReducerKeyTypes.AUTH_USER_SSH_KEYS]: get(apiData, ["data"], []),
+        })
+      );
+      break;
+    case RestApiTypes.DELETE_SSH:
+      const { id } = payload;
+      yield call(objBackened.deleteSSHKeys, id);
+      break;
+    case RestApiTypes.CREATE_SSH:
+      const { data } = payload;
+      console.log("[key data]", data);
+      const res = yield call(objBackened.createSSHKeys, data);
+      console.log("[key created]", res);
       break;
   }
 }

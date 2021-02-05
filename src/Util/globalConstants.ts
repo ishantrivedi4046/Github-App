@@ -8,7 +8,7 @@ export enum constants {
   BASE_FOLLOW_UNFOLLOW_URL = "https://api.github.com/user/following/",
   FOLLOWER = "follower",
   FOLLOWING = "following",
-  INITIAL_AUTHENTICATION_URL = "https://github.com/login/oauth/authorize?client_id=89d1c63f7c22d1bb7e89&redirect_uri=http://localhost:3000/login&scope=repo%20gist%20notifications%20user",
+  INITIAL_AUTHENTICATION_URL = "https://github.com/login/oauth/authorize?client_id=89d1c63f7c22d1bb7e89&redirect_uri=http://localhost:3000/login&scope=repo%20gist%20notifications%20user%20admin:public_key",
 }
 
 export enum LoginReducerKeyTypes {
@@ -20,6 +20,8 @@ export enum LoginReducerKeyTypes {
   SEARCHED_USER_LOADING = "seachedUserLoading",
   SEARCHED_USER_ERROR = "searchedUserError",
   AUTH_USER_FOLLOWING_LIST = "authUserFollowingList",
+  AUTH_USER_SSH_KEYS = "authUserSShkeys",
+  AUTH_USER_SSH_LOADING = "authUserSShkeysLoading",
 }
 
 export enum FollowReducerKeyTypes {
@@ -32,4 +34,7 @@ export enum RestApiTypes {
   SEARCHED_USER_GET = "searchedUserGet",
   FOLLOW = "follow",
   UNFOLLOW = "unfollow",
+  LIST_SSH = "listSSHkeys",
+  CREATE_SSH = "createSSHKeys",
+  DELETE_SSH = "deleteSSHKeys",
 }

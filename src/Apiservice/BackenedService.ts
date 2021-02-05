@@ -1,5 +1,9 @@
 import { getOuthToken } from "../redux/selector/restApiSelector";
-import { FOLLOW_UNFOLLOW, USERS } from "./constants/restConstants";
+import {
+  FOLLOW_UNFOLLOW,
+  USERS,
+  USER_SSH_KEYS,
+} from "./constants/restConstants";
 import { restInstance } from "./restService";
 
 class BackenedService {
@@ -26,6 +30,19 @@ class BackenedService {
 
   unfollowUserService = (name: any) => {
     const url = `${FOLLOW_UNFOLLOW}/${name}`;
+    return restInstance.delete(url);
+  };
+
+  listSSHKeys = () => {
+    return restInstance.get(USER_SSH_KEYS);
+  };
+
+  createSSHKeys = (data: any) => {
+    return restInstance.post(USER_SSH_KEYS, data);
+  };
+
+  deleteSSHKeys = (id: any) => {
+    const url = `${USER_SSH_KEYS}/${id}`;
     return restInstance.delete(url);
   };
 }

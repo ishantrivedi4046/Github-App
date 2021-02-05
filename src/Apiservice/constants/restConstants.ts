@@ -5,3 +5,4 @@ export const GIST = "/gists";
 export const REPOS = "/repos";
 export const USER = "/user";
 export const FOLLOW_UNFOLLOW = `${USER}${FOLLOWING}`;
+export const USER_SSH_KEYS = `${USER}/keys`;
