@@ -23,7 +23,7 @@ function* loginEffectSaga(action: any): any {
         [LoginReducerKeyTypes.IS_LOGGEDIN]: true,
       })
     );
-    const userResData = yield call(apiService.getAuthenticatedUser, token);
+    const userResData = yield call(apiService.getAuthenticatedUser);
     const userData = new RestData(get(userResData, ["data"], {}));
     yield put(
       actionCreator(actions.SET_LOGIN_STATE, {

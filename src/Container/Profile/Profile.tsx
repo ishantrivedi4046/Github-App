@@ -45,10 +45,10 @@ const Profile: React.FC<ProfileProps> = ({
   const [error, setError] = useState<string>("");
   const [value, setValue] = useState<string>(propsUserName || "");
 
-  const selectorFunction = value ? getSearchedUserData : getUser;
-  const userData: RestData = useSelector(selectorFunction);
-  const searchedUserLoadingState = useSelector(getSearchedUserLoading);
   const searchedUser = useSelector(getSearchedUserData);
+  const authUserData = useSelector(getUser);
+  const userData: RestData = value ? searchedUser : authUserData;
+  const searchedUserLoadingState = useSelector(getSearchedUserLoading);
   const searchedUserError = useSelector(getSearchedUserError);
   const dispatch = useDispatch();
 
@@ -114,6 +114,9 @@ const Profile: React.FC<ProfileProps> = ({
     if (type === constants.FOLLOWING) {
       const index = url.indexOf("{");
       url = url.substring(0, index);
+    }
+    if (!!parentUrl === false) {
+      parentUrl = authUserData.followingUrl;
     }
     window.open(`/follow?url=${url}&type=${type}&parentUrl=${parentUrl}`);
   };

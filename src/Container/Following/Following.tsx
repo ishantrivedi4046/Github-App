@@ -7,10 +7,9 @@ import { constants } from "../../Util/globalConstants";
 
 const Following = () => {
   const userData: RestData = useSelector(getUser);
-  const index = userData.followingUrl.indexOf("{");
   return (
     <Followers
-      url={userData.followingUrl.substring(0, index)}
+      url={userData.followingUrl}
       type={constants.FOLLOWING}
       showRefresh={true}
     />

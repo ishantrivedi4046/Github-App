@@ -6,7 +6,6 @@ import Spinner from "../../antDesign/Spinner";
 import { RestData } from "../../classes/RestData";
 import CustomTableComponent from "../../Components/CustomTableComponent";
 import { getFollowColumns } from "../../Config/followTableConfig";
-import { chopFollowingUrl } from "../../Config/helper";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
 import {
@@ -109,7 +108,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
     dispatch(
       actionCreator(actions.RESTAPI_READ, {
         type: RestApiTypes.FOLLOW_LIST,
-        url: props.parentUrl || chopFollowingUrl(currentUserData.followingUrl),
+        url: props.parentUrl || currentUserData.followingUrl,
         extra: true,
       })
     );
@@ -140,9 +139,7 @@ const Followers: React.FC<FollowersProps> = (props) => {
         <Profile
           search={false}
           propsUserName={searchedValue}
-          parentUrl={
-            props.parentUrl || chopFollowingUrl(currentUserData.followingUrl)
-          }
+          parentUrl={props.parentUrl || currentUserData.followingUrl}
         />
       </Modal>
       <CustomTableComponent

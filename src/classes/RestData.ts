@@ -1,4 +1,5 @@
 import { get } from "lodash";
+import { chopFollowingUrl } from "../Config/helper";
 
 export class RestData {
   username = "";
@@ -132,6 +133,6 @@ export class RestData {
     return this.followers_url;
   }
   get followingUrl() {
-    return this.following_url;
+    return chopFollowingUrl(this.following_url);
   }
 }
