@@ -1,6 +1,6 @@
-import axios from "axios";
 import { getOuthToken } from "../redux/selector/restApiSelector";
-import { constants } from "../Util/globalConstants";
+import { FOLLOW_UNFOLLOW, USERS } from "./constants/restConstants";
+import { restInstance } from "./restService";
 
 class BackenedService {
   token = "";
@@ -9,30 +9,24 @@ class BackenedService {
   }
 
   getSearchedUser = (value: any) => {
-    const url = `https://api.github.com/users/${value}`;
-    return axios.get(url, {
-      headers: { Authorization: "token " + getOuthToken() },
-    });
+    const url = `${USERS}/${value}`.toString();
+    return restInstance.get(url);
   };
 
   getAuthUserdataList = (url: string) => {
-    return axios.get(url, {
-      headers: { Authorization: "token " + getOuthToken() },
-    });
+    const index = url.indexOf(USERS);
+    const partial_url = url.substring(index);
+    return restInstance.get(partial_url);
   };
 
   followUserService = (name: any) => {
-    const url = `${constants.BASE_FOLLOW_UNFOLLOW_URL}${name}`;
-    return axios.put(url, null, {
-      headers: { Authorization: "token " + getOuthToken() },
-    });
+    const url = `${FOLLOW_UNFOLLOW}/${name}`;
+    return restInstance.put(url);
   };
 
   unfollowUserService = (name: any) => {
-    const url = `${constants.BASE_FOLLOW_UNFOLLOW_URL}${name}`;
-    return axios.delete(url, {
-      headers: { Authorization: "token " + getOuthToken() },
-    });
+    const url = `${FOLLOW_UNFOLLOW}/${name}`;
+    return restInstance.delete(url);
   };
 }
 export const objBackened = new BackenedService();
