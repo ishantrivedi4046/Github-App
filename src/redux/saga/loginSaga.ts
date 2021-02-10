@@ -16,19 +16,20 @@ function* loginEffectSaga(action: any): any {
       })
     );
     const resultData = yield call(apiService.authenticateUser, code);
-    const token = resultData?.data?.split("&")[0].split("=")[1];
-    localStorage.setItem("OUTH_TOKEN", token);
-    yield put(
-      actionCreator(actions.SET_LOGIN_STATE, {
-        [LoginReducerKeyTypes.IS_LOGGEDIN]: true,
-      })
-    );
-    const userResData = yield call(apiService.getAuthenticatedUser);
-    const userData = new RestData(get(userResData, ["data"], {}));
+    console.log("resultdata", resultData);
+    // const token = resultData?.data?.split("&")[0].split("=")[1];
+    // localStorage.setItem("OUTH_TOKEN", token);
+    // yield put(
+    //   actionCreator(actions.SET_LOGIN_STATE, {
+    //     [LoginReducerKeyTypes.IS_LOGGEDIN]: true,
+    //   })
+    // );
+    // const userResData = yield call(apiService.getAuthenticatedUser);
+    // const userData = new RestData(get(userResData, ["data"], {}));
     yield put(
       actionCreator(actions.SET_LOGIN_STATE, {
         [LoginReducerKeyTypes.AUTH_LOADING]: false,
-        [LoginReducerKeyTypes.USERDATA]: userData,
+        [LoginReducerKeyTypes.USERDATA]: resultData,
       })
     );
   } catch (e: any) {
