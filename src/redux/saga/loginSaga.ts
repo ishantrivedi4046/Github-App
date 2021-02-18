@@ -1,36 +1,42 @@
 import { notification } from "antd";
-import { call, put, takeLatest } from "redux-saga/effects";
 import { actions } from "../action/actions";
-import apiService from "../../Apiservice/loginSerice";
 import { RestData } from "../../classes/RestData";
-import { get } from "lodash";
 import { actionCreator } from "../action/actionCreator";
-import { LoginReducerKeyTypes } from "../../Util/globalConstants";
+import { constants, LoginReducerKeyTypes } from "../../Util/globalConstants";
+import { put, takeLatest } from "redux-saga/effects";
 
 function* loginEffectSaga(action: any): any {
-  const { code } = action.payload;
+  const { requestData, dispatch } = action.payload;
   try {
     yield put(
       actionCreator(actions.SET_LOGIN_STATE, {
         [LoginReducerKeyTypes.AUTH_LOADING]: true,
       })
     );
-    const resultData = yield call(apiService.authenticateUser, code);
-    // const token = resultData?.data?.split("&")[0].split("=")[1];
-    // localStorage.setItem("OUTH_TOKEN", token);
-    // yield put(
-    //   actionCreator(actions.SET_LOGIN_STATE, {
-    //     [LoginReducerKeyTypes.IS_LOGGEDIN]: true,
-    //   })
-    // );
-    // const userResData = yield call(apiService.getAuthenticatedUser);
-    // const userData = new RestData(get(userResData, ["data"], {}));
-    // yield put(
-    //   actionCreator(actions.SET_LOGIN_STATE, {
-    //     [LoginReducerKeyTypes.AUTH_LOADING]: false,
-    //     [LoginReducerKeyTypes.USERDATA]: resultData,
-    //   })
-    // );
+
+    // Use code parameter and other parameters to make POST request to proxy_server
+    fetch(constants.REACT_APP_PROXY_URL, {
+      method: "POST",
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(
+          actionCreator(actions.SET_LOGIN_STATE, {
+            [LoginReducerKeyTypes.AUTH_LOADING]: false,
+            [LoginReducerKeyTypes.IS_LOGGEDIN]: true,
+            [LoginReducerKeyTypes.ACCESS_TOKEN]: data.OUTH_TOKEN,
+            [LoginReducerKeyTypes.USERDATA]: new RestData(data),
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          actionCreator(actions.SET_LOGIN_STATE, {
+            [LoginReducerKeyTypes.AUTH_LOADING]: false,
+          })
+        );
+      });
   } catch (e: any) {
     notification.error({
       message: e.message || "Something went wrong!",
