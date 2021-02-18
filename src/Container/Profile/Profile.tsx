@@ -44,7 +44,6 @@ const Profile: React.FC<ProfileProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [value, setValue] = useState<string>(propsUserName || "");
-
   const searchedUser = useSelector(getSearchedUserData);
   const authUserData = useSelector(getUser);
   const userData: RestData = value ? searchedUser : authUserData;
@@ -53,6 +52,18 @@ const Profile: React.FC<ProfileProps> = ({
   const dispatch = useDispatch();
 
   const { profileImage, userBio, userName } = userData;
+
+  useEffect(() => {
+    return () => {
+      dispatch(
+        actionCreator(actions.SET_LOGIN_STATE, {
+          [LoginReducerKeyTypes.SEARCHED_USER_ERROR]: false,
+          [LoginReducerKeyTypes.SEARCHED_USER]: {},
+        })
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (propsUserName) {
