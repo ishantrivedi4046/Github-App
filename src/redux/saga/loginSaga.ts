@@ -16,7 +16,6 @@ function* loginEffectSaga(action: any): any {
       })
     );
     const resultData = yield call(apiService.authenticateUser, code);
-    console.log("resultdata", resultData);
     // const token = resultData?.data?.split("&")[0].split("=")[1];
     // localStorage.setItem("OUTH_TOKEN", token);
     // yield put(
@@ -26,12 +25,12 @@ function* loginEffectSaga(action: any): any {
     // );
     // const userResData = yield call(apiService.getAuthenticatedUser);
     // const userData = new RestData(get(userResData, ["data"], {}));
-    yield put(
-      actionCreator(actions.SET_LOGIN_STATE, {
-        [LoginReducerKeyTypes.AUTH_LOADING]: false,
-        [LoginReducerKeyTypes.USERDATA]: resultData,
-      })
-    );
+    // yield put(
+    //   actionCreator(actions.SET_LOGIN_STATE, {
+    //     [LoginReducerKeyTypes.AUTH_LOADING]: false,
+    //     [LoginReducerKeyTypes.USERDATA]: resultData,
+    //   })
+    // );
   } catch (e: any) {
     notification.error({
       message: e.message || "Something went wrong!",

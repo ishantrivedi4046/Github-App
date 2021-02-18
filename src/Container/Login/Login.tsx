@@ -45,6 +45,7 @@ const Login: React.FC = () => {
             actionCreator(actions.SET_LOGIN_STATE, {
               [LoginReducerKeyTypes.AUTH_LOADING]: false,
               [LoginReducerKeyTypes.IS_LOGGEDIN]: true,
+              [LoginReducerKeyTypes.ACCESS_TOKEN]: data.OUTH_TOKEN,
               [LoginReducerKeyTypes.USERDATA]: new RestData(data),
             })
           );

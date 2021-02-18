@@ -24,6 +24,7 @@ export enum LoginReducerKeyTypes {
   AUTH_USER_FOLLOWING_LIST = "authUserFollowingList",
   AUTH_USER_SSH_KEYS = "authUserSShkeys",
   AUTH_USER_SSH_LOADING = "authUserSShkeysLoading",
+  ACCESS_TOKEN = "accessToken",
 }
 
 export enum FollowReducerKeyTypes {

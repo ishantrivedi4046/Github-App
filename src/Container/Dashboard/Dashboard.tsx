@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../redux/selector/restApiSelector";
 import { Route, useRouteMatch } from "react-router";
 import Spinner from "../../antDesign/Spinner";
@@ -9,14 +9,33 @@ import Icon from "@ant-design/icons";
 import { routes } from "../../routes/index";
 import { NavLink, Switch } from "react-router-dom";
 import { SidebarOptions } from "./helper";
+import { LoginReducerKeyTypes } from "../../Util/globalConstants";
+import { get } from "lodash";
+import { actionCreator } from "../../redux/action/actionCreator";
+import { actions } from "../../redux/action/actions";
 
 const { Sider, Header, Content } = Layout;
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [collapse, setCollapse] = useState(false);
+  const dispatch = useDispatch();
   const userDataState = useSelector(getUser);
+  const accessToken = useSelector((state: any) =>
+    get(state.loginReducer, [LoginReducerKeyTypes.ACCESS_TOKEN], null)
+  );
   let { path, url } = useRouteMatch();
+
+  useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem("OUTH_TOKEN", accessToken);
+      dispatch(
+        actionCreator(actions.SET_LOGIN_STATE, {
+          [LoginReducerKeyTypes.ACCESS_TOKEN]: undefined,
+        })
+      );
+    }
+  }, [accessToken, dispatch]);
 
   useEffect(() => {
     if (loading) {

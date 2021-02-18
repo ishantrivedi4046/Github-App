@@ -10,6 +10,7 @@ const initialState = {
   [LoginReducerKeyTypes.SEARCHED_USER_ERROR]: false,
   [LoginReducerKeyTypes.AUTH_USER_SSH_KEYS]: [],
   [LoginReducerKeyTypes.AUTH_USER_SSH_LOADING]: true,
+  [LoginReducerKeyTypes.ACCESS_TOKEN]: undefined,
 };
 
 const loginReducer = (

@@ -16,6 +16,8 @@ app.use((req, res, next) => {
   next();
 });
 
+let token = null;
+
 app.post("/authenticate", (req, res) => {
   const { code } = req.body;
 
@@ -34,6 +36,7 @@ app.post("/authenticate", (req, res) => {
     .then((paramsString) => {
       let params = new URLSearchParams(paramsString);
       const access_token = params.get("access_token");
+      token = access_token;
       // Request to return data of a user that has been authenticated
       return fetch(`https://api.github.com/user`, {
         headers: {
@@ -43,7 +46,8 @@ app.post("/authenticate", (req, res) => {
     })
     .then((response) => response.json())
     .then((response) => {
-      return res.status(200).json(response);
+      const newResponse = { ...response, OUTH_TOKEN: token };
+      return res.status(200).json(newResponse);
     })
     .catch((error) => {
       console.log(error);
