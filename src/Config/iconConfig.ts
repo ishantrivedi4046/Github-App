@@ -6,3 +6,4 @@ export * as Md from "react-icons/md";
 export * as Go from "react-icons/go";
 export * as Gi from "react-icons/gi";
 export * as Ri from "react-icons/ri";
+export * as Ai from "react-icons/ai";

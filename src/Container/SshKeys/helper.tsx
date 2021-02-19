@@ -1,8 +1,9 @@
-import { Popconfirm, Tooltip } from "antd";
+import { Button, Card, notification, Popconfirm, Tooltip } from "antd";
 import { get, truncate } from "lodash";
 import React from "react";
 import Icon from "@ant-design/icons";
-import { Ri } from "../../Config/iconConfig";
+import { Ri, Ai } from "../../Config/iconConfig";
+import copy from "copy-to-clipboard";
 
 export const sshColumns = (handleKeyDelete: any) => {
   return [
@@ -11,11 +12,7 @@ export const sshColumns = (handleKeyDelete: any) => {
       dataIndex: "title",
       key: "title",
       render: (item: any, record: any, index: number) => {
-        return (
-          <a href={get(record, ["url"], "")} target={"_blank"} rel="noreferrer">
-            {get(record, ["title"], "")}
-          </a>
-        );
+        return <Button type="link">{get(record, ["title"], "")}</Button>;
       },
     },
     {
@@ -25,7 +22,43 @@ export const sshColumns = (handleKeyDelete: any) => {
       render: (item: any, record: any, index: number) => {
         const key = get(record, ["key"], "");
         return (
-          <Tooltip title={key || "Nothing to show!"}>
+          <Tooltip
+            title={
+              <Card
+                bordered={false}
+                extra={
+                  <Button
+                    onClick={() => {
+                      copy(key);
+                      notification.success({
+                        message: `${get(record, ["title"], "")} Copied!`,
+                        duration: 1,
+                      });
+                    }}
+                    size="large"
+                    shape="circle"
+                    style={{
+                      backgroundColor: "#f50",
+                      color: "white",
+                      border: "1px solid #FF5500",
+                    }}
+                  >
+                    <Icon
+                      component={Ai.AiFillCopy}
+                      style={{ fontSize: "2rem" }}
+                    />
+                  </Button>
+                }
+                style={{
+                  fontWeight: "normal",
+                  fontSize: "1.5rem",
+                  backgroundColor: "#722ED1",
+                  color: "white",
+                }}
+              >{`${truncate(key, { length: 100 })}...`}</Card>
+            }
+            color={"purple"}
+          >
             {truncate(key, { length: 10 })}
           </Tooltip>
         );

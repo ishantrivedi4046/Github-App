@@ -25,7 +25,7 @@ const SshKeysComponent: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
   const sshListLoadingState = useSelector(getSShKeyListStateLoading);
   const sshListState = useSelector(getSShKeyListState);
-  const debouncedTitleSet = debounce(setTitle, 100);
+  const debouncedTitleSet = debounce(setTitle, 200);
   const debouncedKeySet = debounce(setKey, 100);
 
   console.log("from ssh component", sshListState);
