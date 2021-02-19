@@ -40,4 +40,11 @@ export enum RestApiTypes {
   LIST_SSH = "listSSHkeys",
   CREATE_SSH = "createSSHKeys",
   DELETE_SSH = "deleteSSHKeys",
+  GET_REPOS = "getAuthUserRepos",
+}
+
+export enum RepoReducerType {
+  REPOS_LIST = "repoList",
+  REPO_BRANCHES_LIST = "repoBranchesList",
+  REPO_BRANCH_COMMIT_LIST = "repoBranchCommitList",
 }

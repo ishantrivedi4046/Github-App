@@ -1,7 +1,9 @@
 import React from "react";
 
-function Repository() {
+interface RepositoryProps {}
+
+const Repository: React.FC<RepositoryProps> = (props) => {
   return <div>Repository</div>;
-}
+};
 
 export default Repository;

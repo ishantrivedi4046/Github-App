@@ -6,3 +6,4 @@ export const REPOS = "/repos";
 export const USER = "/user";
 export const FOLLOW_UNFOLLOW = `${USER}${FOLLOWING}`;
 export const USER_SSH_KEYS = `${USER}/keys`;
+export const AUTH_USER_REPOS = `${USER}${REPOS}`;

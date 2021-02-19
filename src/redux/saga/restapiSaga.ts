@@ -3,6 +3,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import {
   FollowReducerKeyTypes,
   LoginReducerKeyTypes,
+  RepoReducerType,
   RestApiTypes,
 } from "../../Util/globalConstants";
 import { actions } from "../action/actions";
@@ -108,8 +109,16 @@ export function* restapiEffectSaga(action: any) {
     case RestApiTypes.CREATE_SSH:
       const { data } = payload;
       console.log("[key data]", data);
-      const res = yield call(objBackened.createSSHKeys, data);
+      let res = yield call(objBackened.createSSHKeys, data);
       console.log("[key created]", res);
+      break;
+    case RestApiTypes.GET_REPOS:
+      res = yield call(objBackened.getAuthUserRepos);
+      yield put(
+        actionCreator(actions.SET_REPO_STATE, {
+          [RepoReducerType.REPOS_LIST]: res,
+        })
+      );
       break;
   }
 }

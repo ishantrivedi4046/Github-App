@@ -1,5 +1,6 @@
 import { getOuthToken } from "../redux/selector/restApiSelector";
 import {
+  AUTH_USER_REPOS,
   FOLLOW_UNFOLLOW,
   USERS,
   USER_SSH_KEYS,
@@ -44,6 +45,10 @@ class BackenedService {
   deleteSSHKeys = (id: any) => {
     const url = `${USER_SSH_KEYS}/${id}`;
     return restInstance.delete(url);
+  };
+
+  getAuthUserRepos = () => {
+    return restInstance.get(AUTH_USER_REPOS);
   };
 }
 export const objBackened = new BackenedService();

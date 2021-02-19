@@ -4,4 +4,5 @@ export enum actions {
   SET_FOLLOWERS_STATE = "setFollowerList",
   RESTAPI_READ = "restapi_read",
   SET_ACCESS_TOKEN = "setAccessToken",
+  SET_REPO_STATE = "setRepoState",
 }
