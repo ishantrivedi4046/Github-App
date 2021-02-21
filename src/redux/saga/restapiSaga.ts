@@ -11,6 +11,7 @@ import { objBackened } from "../../Apiservice/BackenedService";
 import { RestData } from "../../classes/RestData";
 import { actionCreator } from "../action/actionCreator";
 import { get } from "lodash";
+import { RepoData } from "../../classes/RepoData";
 
 export function* restapiEffectSaga(action: any) {
   const { payload } = action;
@@ -113,10 +114,19 @@ export function* restapiEffectSaga(action: any) {
       console.log("[key created]", res);
       break;
     case RestApiTypes.GET_REPOS:
-      res = yield call(objBackened.getAuthUserRepos);
       yield put(
         actionCreator(actions.SET_REPO_STATE, {
-          [RepoReducerType.REPOS_LIST]: res,
+          [RepoReducerType.REPO_LOADING]: true,
+        })
+      );
+      const result = yield call(objBackened.getAuthUserRepos);
+      const transformedResult = get(result, ["data"], []).map((record: any) => {
+        return new RepoData(record);
+      });
+      yield put(
+        actionCreator(actions.SET_REPO_STATE, {
+          [RepoReducerType.REPO_LOADING]: false,
+          [RepoReducerType.REPOS_LIST]: transformedResult,
         })
       );
       break;

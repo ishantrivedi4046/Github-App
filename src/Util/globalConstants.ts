@@ -47,4 +47,5 @@ export enum RepoReducerType {
   REPOS_LIST = "repoList",
   REPO_BRANCHES_LIST = "repoBranchesList",
   REPO_BRANCH_COMMIT_LIST = "repoBranchCommitList",
+  REPO_LOADING = "repoLoading",
 }

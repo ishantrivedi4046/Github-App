@@ -6,12 +6,14 @@ interface CustomTableComponentProps {
   type: string;
   columns: any;
   dataSource: any;
+  expandable?: any;
 }
 
 const CustomTableComponent: React.FC<CustomTableComponentProps> = ({
   type,
   columns,
   dataSource,
+  expandable,
 }) => {
   return (
     <div className="custom-table">
@@ -25,6 +27,7 @@ const CustomTableComponent: React.FC<CustomTableComponentProps> = ({
         size="small"
         columns={columns}
         dataSource={dataSource}
+        expandable={expandable}
         pagination={
           dataSource.length > 10 ? { position: ["bottomRight"] } : false
         }

@@ -5,6 +5,7 @@ const initialState = {
   [RepoReducerType.REPOS_LIST]: [],
   [RepoReducerType.REPO_BRANCHES_LIST]: {},
   [RepoReducerType.REPO_BRANCH_COMMIT_LIST]: {},
+  [RepoReducerType.REPO_LOADING]: false,
 };
 
 const RepoReducer = (

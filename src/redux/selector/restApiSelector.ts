@@ -2,6 +2,7 @@ import { get } from "lodash";
 import {
   FollowReducerKeyTypes,
   LoginReducerKeyTypes,
+  RepoReducerType,
 } from "../../Util/globalConstants";
 
 export const getLogin = (state: any) => {
@@ -64,3 +65,9 @@ export const getSShKeyListStateLoading = (state: any) => {
     true
   );
 };
+
+export const getRepoState = (state: any) =>
+  get(state.RepoReducer, [RepoReducerType.REPOS_LIST], []);
+
+export const getRepoLoading = (state: any) =>
+  get(state.RepoReducer, [RepoReducerType.REPO_LOADING], true);
