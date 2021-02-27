@@ -5,4 +5,5 @@ export enum actions {
   RESTAPI_READ = "restapi_read",
   SET_ACCESS_TOKEN = "setAccessToken",
   SET_REPO_STATE = "setRepoState",
+  SET_REPO_BRANCHES = "setBranches",
 }

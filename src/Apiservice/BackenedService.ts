@@ -50,5 +50,10 @@ class BackenedService {
   getAuthUserRepos = () => {
     return restInstance.get(AUTH_USER_REPOS);
   };
+
+  getRepoBranches = (url: string) => {
+    console.log("[branches url]", url);
+    return restInstance.get(url);
+  };
 }
 export const objBackened = new BackenedService();

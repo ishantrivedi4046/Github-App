@@ -1,3 +1,5 @@
+import { chopFollowingUrl } from "../Config/helper";
+
 export class RepoData {
   key = "";
   id = "";
@@ -23,7 +25,7 @@ export class RepoData {
       this.isPrivate = restdata.private;
       this.description = restdata.description;
       this.isForked = restdata.fork;
-      this.branchesUrl = this.trimUrl(restdata.branches_url || "");
+      this.branchesUrl = chopFollowingUrl(restdata.branches_url || "");
       this.tagsUrl = restdata.tags_url;
       this.languagesUrl = restdata.languages_url;
       this.created_at = restdata.created_at;
@@ -32,8 +34,5 @@ export class RepoData {
       this.open_issue_count = restdata.open_issues_count;
       this.default_branch = restdata.default_branch;
     }
-  }
-  trimUrl(url: any) {
-    return url.substring(0, url.indexOf("{"));
   }
 }

@@ -18,6 +18,14 @@ const RepoReducer = (
         ...(state || {}),
         ...(action.payload || {}),
       };
+    case actions.SET_REPO_BRANCHES:
+      return {
+        ...(state || {}),
+        [RepoReducerType.REPO_BRANCHES_LIST]: {
+          ...(state?.[RepoReducerType.REPO_BRANCHES_LIST] || {}),
+          ...(action.payload || {}),
+        },
+      };
     default:
       return state;
   }

@@ -1,15 +1,19 @@
-import { Card, Col, Drawer, Row, Typography } from "antd";
+import { Card, Col, Collapse, Drawer, Row, Typography } from "antd";
 import { capitalize } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../antDesign/Spinner";
+import { REPOS } from "../../Apiservice/constants/restConstants";
 import { RepoData } from "../../classes/RepoData";
+import { RestData } from "../../classes/RestData";
 import CustomTableComponent from "../../Components/CustomTableComponent";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
 import {
+  getRepoBranches,
   getRepoLoading,
   getRepoState,
+  getUser,
 } from "../../redux/selector/restApiSelector";
 import { RestApiTypes } from "../../Util/globalConstants";
 import { RepoColumns } from "./helper";
@@ -22,6 +26,8 @@ const Repository: React.FC<RepositoryProps> = (props) => {
   const repoDataState = useSelector(getRepoState);
   const repoLoading = useSelector(getRepoLoading);
   const dispatch = useDispatch();
+  const user: RestData = useSelector(getUser);
+  const repoBranches = useSelector(getRepoBranches);
 
   useEffect(() => {
     dispatch(
@@ -144,9 +150,38 @@ const Repository: React.FC<RepositoryProps> = (props) => {
         columns={RepoColumns(handleShowDrawer)}
         dataSource={repoDataState}
         expandable={{
-          expandedRowRender: (record: RepoData) => (
-            <Card key={record.id}>{record.description}</Card>
-          ),
+          expandedRowRender: (record: RepoData) => {
+            const branches = repoBranches?.[record.id] || [];
+            return (
+              <Collapse accordion ghost>
+                {branches.length > 0 &&
+                  branches.map((branch: any, index: number) => (
+                    <Collapse.Panel
+                      key={`${record.id}_${index}`}
+                      header={branch.name}
+                      style={{ fontWeight: "bold" }}
+                    >
+                      <Card>{record.description}</Card>
+                    </Collapse.Panel>
+                  ))}
+              </Collapse>
+            );
+          },
+          onExpand: (expanded: boolean, record: RepoData) => {
+            if (
+              expanded &&
+              !Object.keys(repoBranches).includes(record.id.toString())
+            ) {
+              const url = `${REPOS}/${user.userName}/${record.name}/branches`;
+              dispatch(
+                actionCreator(actions.RESTAPI_READ, {
+                  type: RestApiTypes.GET_REPO_BRANCHES,
+                  url,
+                  id: record.id,
+                })
+              );
+            }
+          },
         }}
       />
     </>

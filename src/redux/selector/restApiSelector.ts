@@ -71,3 +71,7 @@ export const getRepoState = (state: any) =>
 
 export const getRepoLoading = (state: any) =>
   get(state.RepoReducer, [RepoReducerType.REPO_LOADING], true);
+
+export const getRepoBranches = (state: any) => {
+  return get(state.RepoReducer, [RepoReducerType.REPO_BRANCHES_LIST], {});
+};

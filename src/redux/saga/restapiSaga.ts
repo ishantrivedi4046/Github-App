@@ -130,6 +130,28 @@ export function* restapiEffectSaga(action: any) {
         })
       );
       break;
+    case RestApiTypes.GET_REPO_BRANCHES:
+      const { url: branchUrl, id: repoId } = payload;
+      yield put(
+        actionCreator(actions.SET_REPO_STATE, {
+          [RepoReducerType.REPO_LOADING]: true,
+        })
+      );
+      const branchApiResult = yield call(
+        objBackened.getRepoBranches,
+        branchUrl
+      );
+      const branchApiData = get(branchApiResult, ["data"], []);
+      yield put(
+        actionCreator(actions.SET_REPO_BRANCHES, {
+          [repoId]: branchApiData,
+        })
+      );
+      yield put(
+        actionCreator(actions.SET_REPO_STATE, {
+          [RepoReducerType.REPO_LOADING]: false,
+        })
+      );
   }
 }
 

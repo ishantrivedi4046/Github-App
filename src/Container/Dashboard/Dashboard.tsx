@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../redux/selector/restApiSelector";
 import { Route, useRouteMatch } from "react-router";
 import Spinner from "../../antDesign/Spinner";
-import { Layout, Menu, Typography } from "antd";
+import { Carousel, Layout, Menu, Typography } from "antd";
 import { Vsc } from "../../Config/iconConfig";
 import Icon from "@ant-design/icons";
 import { routes } from "../../routes/index";
@@ -13,6 +13,10 @@ import { LoginReducerKeyTypes } from "../../Util/globalConstants";
 import { get } from "lodash";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
+import gitpic1 from "../../assets/img/git1.jpg";
+import gitpic2 from "../../assets/img/git2.jpg";
+import gitpic3 from "../../assets/img/git3.png";
+import gitpic4 from "../../assets/img/git4.jpg";
 
 const { Sider, Header, Content } = Layout;
 
@@ -108,6 +112,22 @@ const Dashboard = () => {
                 key={index}
               />
             ))}
+            <Route
+              path={path}
+              render={(props: any) => (
+                <Carousel autoplay>
+                  <img
+                    alt="gitpic1"
+                    src={gitpic1}
+                    style={{ height: "32rem" }}
+                  />
+
+                  {/* <img alt="gitpic2" src={gitpic2} />
+                  <img alt="gitpic3" src={gitpic3} />
+                  <img alt="gitpic4" src={gitpic4} /> */}
+                </Carousel>
+              )}
+            />
           </Switch>
         </Content>
       </Layout>

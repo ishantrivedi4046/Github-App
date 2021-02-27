@@ -41,6 +41,7 @@ export enum RestApiTypes {
   CREATE_SSH = "createSSHKeys",
   DELETE_SSH = "deleteSSHKeys",
   GET_REPOS = "getAuthUserRepos",
+  GET_REPO_BRANCHES = "getRepoBranches",
 }
 
 export enum RepoReducerType {
