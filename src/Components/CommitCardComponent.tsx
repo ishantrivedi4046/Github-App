@@ -1,8 +1,9 @@
 import { Card, Col, Row, Spin, Tabs } from "antd";
 import { get } from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getRepoCommitLoading } from "../redux/selector/restApiSelector";
+import { CodeBlock, github } from "react-code-blocks";
 
 interface ComitCardProps {
   commitRecord: any;
@@ -14,7 +15,11 @@ const CommitCardComponent: React.FC<ComitCardProps> = ({ commitRecord }) => {
   const author = get(commit, ["author"], "No Author");
   const commiter = get(commit, ["committer"], "No Author");
   const files = get(commitRecord, ["files"], []);
-  const stats = get(commitRecord, ["stats"], []);
+  const [activeKey, setActiveKey] = useState<any>(0);
+
+  const handleTabChange = (key: any) => {
+    setActiveKey(key);
+  };
 
   const dataObject = [
     {
@@ -42,31 +47,63 @@ const CommitCardComponent: React.FC<ComitCardProps> = ({ commitRecord }) => {
     );
   }
   return (
-    <Card title={commit?.message} style={{ width: "100%" }}>
+    <Card
+      title={`Commit Message : ${commit?.message}`}
+      style={{
+        width: "104rem",
+        marginLeft: "auto",
+        marginRight: "auto",
+      }}
+    >
       {dataObject.map((item: any, index: number) => {
         return (
           <Row key={index}>
-            <Col span={24} style={{ display: "flex" }}>
-              <h2>{item.title}</h2>
-              <p style={{ paddingLeft: "0.5rem" }}>{item.subtitle}</p>
+            <Col span={6} style={{ color: "#083263" }}>
+              <p>{item.title.toUpperCase()}</p>
+            </Col>
+            <Col span={2}>{" : "}</Col>
+            <Col span={16} style={{ color: "#1890ff" }}>
+              <p style={{ paddingLeft: "0.5rem", fontWeight: "lighter" }}>
+                {item.subtitle}
+              </p>
             </Col>
           </Row>
         );
       })}
-      <Tabs>
-        {files.map((file: any) => {
+      <Tabs
+        activeKey={activeKey}
+        onChange={handleTabChange}
+        style={{ marginTop: "2rem" }}
+      >
+        {files.map((file: any, index: number) => {
           return (
-            <Tabs.TabPane tab={file?.filename} tabKey={file?.sha}>
-              <Row>
-                <Col span={24} style={{ display: "flex" }}>
-                  <h2>Status</h2>
-                  <p style={{ paddingLeft: "0.5rem" }}>{file?.status}</p>
+            <Tabs.TabPane
+              tab={<p style={{ margin: "0.25rem" }}>{file?.filename}</p>}
+              key={index}
+            >
+              <Row gutter={[10, 10]}>
+                <Col span={5} style={{ color: "#083263" }}>
+                  <p>Status</p>
+                </Col>
+                <Col span={2}>{" : "}</Col>
+                <Col span={17} style={{ color: "#1890ff" }}>
+                  <p style={{ paddingLeft: "0.5rem" }}>
+                    {file?.status.toUpperCase()}
+                  </p>
                 </Col>
               </Row>
-              <Row>
-                <Col span={24} style={{ display: "flex" }}>
-                  <h2>Patch : </h2>
-                  <p style={{ paddingLeft: "0.5rem" }}>{file?.status}</p>
+              <Row gutter={[10, 10]}>
+                <Col span={5} style={{ color: "#083263" }}>
+                  <p>Patch</p>
+                </Col>
+                <Col span={2}>{" : "}</Col>
+                <Col span={17}>
+                  <CodeBlock
+                    text={file?.patch}
+                    language="javascript"
+                    theme={github}
+                    showLineNumbers={true}
+                  />
                 </Col>
               </Row>
             </Tabs.TabPane>
