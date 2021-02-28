@@ -152,6 +152,30 @@ export function* restapiEffectSaga(action: any) {
           [RepoReducerType.REPO_LOADING]: false,
         })
       );
+      break;
+    case RestApiTypes.GET_REPO_BRANCH_COMMITS:
+      const { url: commitUrl, id: commitId } = payload;
+      yield put(
+        actionCreator(actions.SET_REPO_STATE, {
+          [RepoReducerType.REPO_COMMIT_LOADING]: true,
+        })
+      );
+      const branchCommitApiResult = yield call(
+        objBackened.getRepoBranches,
+        commitUrl
+      );
+      console.log("[commits]", branchCommitApiResult);
+      const branchCommitApiData = get(branchCommitApiResult, ["data"], []);
+      yield put(
+        actionCreator(actions.SET_REPO_BRANCH_COMMITS, {
+          [commitId]: branchCommitApiData,
+        })
+      );
+      yield put(
+        actionCreator(actions.SET_REPO_STATE, {
+          [RepoReducerType.REPO_COMMIT_LOADING]: false,
+        })
+      );
   }
 }
 

@@ -75,3 +75,10 @@ export const getRepoLoading = (state: any) =>
 export const getRepoBranches = (state: any) => {
   return get(state.RepoReducer, [RepoReducerType.REPO_BRANCHES_LIST], {});
 };
+
+export const getRepoBrancheCommits = (state: any) => {
+  return get(state.RepoReducer, [RepoReducerType.REPO_BRANCH_COMMIT_LIST], {});
+};
+
+export const getRepoCommitLoading = (state: any) =>
+  get(state.RepoReducer, [RepoReducerType.REPO_COMMIT_LOADING], true);

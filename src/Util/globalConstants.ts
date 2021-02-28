@@ -42,6 +42,7 @@ export enum RestApiTypes {
   DELETE_SSH = "deleteSSHKeys",
   GET_REPOS = "getAuthUserRepos",
   GET_REPO_BRANCHES = "getRepoBranches",
+  GET_REPO_BRANCH_COMMITS = "getRepoBranchCommits",
 }
 
 export enum RepoReducerType {
@@ -49,4 +50,5 @@ export enum RepoReducerType {
   REPO_BRANCHES_LIST = "repoBranchesList",
   REPO_BRANCH_COMMIT_LIST = "repoBranchCommitList",
   REPO_LOADING = "repoLoading",
+  REPO_COMMIT_LOADING = "repoCommitLoading",
 }

@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Result } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,14 +34,6 @@ const Followers: React.FC<FollowersProps> = (props) => {
   const followListLoadingState = useSelector(getFollowListLoading);
   const dispatch = useDispatch();
   const URL = props.url ? props.url : currentUserData?.followersUrl;
-
-  const fakeData = [
-    {
-      avatar_url: currentUserData.profileImage,
-      username: currentUserData.userName,
-      key: "fake",
-    },
-  ];
 
   const dataSource = (followersList || []).map(
     (item: RestData, index: number) => ({
@@ -142,11 +134,15 @@ const Followers: React.FC<FollowersProps> = (props) => {
           parentUrl={props.parentUrl || currentUserData.followingUrl}
         />
       </Modal>
-      <CustomTableComponent
-        type={props.type || "Followers"}
-        columns={_column}
-        dataSource={(dataSource || []).length === 0 ? fakeData : dataSource}
-      />
+      {dataSource.length > 0 ? (
+        <CustomTableComponent
+          type={props.type || "Followers"}
+          columns={_column}
+          dataSource={dataSource}
+        />
+      ) : (
+        <Result status="404" title="Nothings In Here :(" />
+      )}
     </>
   );
 };

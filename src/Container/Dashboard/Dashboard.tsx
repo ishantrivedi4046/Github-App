@@ -115,17 +115,26 @@ const Dashboard = () => {
             <Route
               path={path}
               render={(props: any) => (
-                <Carousel autoplay>
-                  <img
-                    alt="gitpic1"
-                    src={gitpic1}
-                    style={{ height: "32rem" }}
-                  />
-
-                  {/* <img alt="gitpic2" src={gitpic2} />
-                  <img alt="gitpic3" src={gitpic3} />
-                  <img alt="gitpic4" src={gitpic4} /> */}
-                </Carousel>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100vh",
+                  }}
+                >
+                  <Carousel
+                    autoplay
+                    className="carousal-style"
+                    dotPosition="left"
+                    dots={{
+                      className: "dotStyle",
+                    }}
+                  >
+                    <img alt="gitpic1" src={gitpic1} />
+                    <img alt="gitpic2" src={gitpic2} />
+                    <img alt="gitpic3" src={gitpic3} />
+                    <img alt="gitpic4" src={gitpic4} />
+                  </Carousel>
+                </div>
               )}
             />
           </Switch>

@@ -6,6 +6,7 @@ const initialState = {
   [RepoReducerType.REPO_BRANCHES_LIST]: {},
   [RepoReducerType.REPO_BRANCH_COMMIT_LIST]: {},
   [RepoReducerType.REPO_LOADING]: false,
+  [RepoReducerType.REPO_COMMIT_LOADING]: false,
 };
 
 const RepoReducer = (
@@ -23,6 +24,14 @@ const RepoReducer = (
         ...(state || {}),
         [RepoReducerType.REPO_BRANCHES_LIST]: {
           ...(state?.[RepoReducerType.REPO_BRANCHES_LIST] || {}),
+          ...(action.payload || {}),
+        },
+      };
+    case actions.SET_REPO_BRANCH_COMMITS:
+      return {
+        ...(state || {}),
+        [RepoReducerType.REPO_BRANCH_COMMIT_LIST]: {
+          ...(state?.[RepoReducerType.REPO_BRANCH_COMMIT_LIST] || {}),
           ...(action.payload || {}),
         },
       };

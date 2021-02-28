@@ -1,11 +1,12 @@
-import { Card, Col, Collapse, Drawer, Row, Typography } from "antd";
-import { capitalize } from "lodash";
+import { Card, Col, Collapse, Drawer, Row, Spin, Typography } from "antd";
+import { capitalize, get } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../antDesign/Spinner";
 import { REPOS } from "../../Apiservice/constants/restConstants";
 import { RepoData } from "../../classes/RepoData";
 import { RestData } from "../../classes/RestData";
+import CommitCardComponent from "../../Components/CommitCardComponent";
 import CustomTableComponent from "../../Components/CustomTableComponent";
 import { actionCreator } from "../../redux/action/actionCreator";
 import { actions } from "../../redux/action/actions";
@@ -14,6 +15,8 @@ import {
   getRepoLoading,
   getRepoState,
   getUser,
+  getRepoBrancheCommits,
+  getRepoCommitLoading,
 } from "../../redux/selector/restApiSelector";
 import { RestApiTypes } from "../../Util/globalConstants";
 import { RepoColumns } from "./helper";
@@ -28,6 +31,7 @@ const Repository: React.FC<RepositoryProps> = (props) => {
   const dispatch = useDispatch();
   const user: RestData = useSelector(getUser);
   const repoBranches = useSelector(getRepoBranches);
+  const repoBrancheCommits = useSelector(getRepoBrancheCommits);
 
   useEffect(() => {
     dispatch(
@@ -48,6 +52,28 @@ const Repository: React.FC<RepositoryProps> = (props) => {
 
   const handleShowDrawer = (record: RepoData) => {
     setShowDrawer(record);
+  };
+
+  const handlePanelChange = (key: any, name: string) => {
+    if (key !== undefined) {
+      const keySplit = key.split("_");
+      const url = `${REPOS}/${user.userName}/${name}/commits/${keySplit[1]}`;
+      const commitKey = `${keySplit[0]}_${keySplit[2]}`;
+      if (!Object.keys(repoBrancheCommits).includes(commitKey)) {
+        dispatch(
+          actionCreator(actions.RESTAPI_READ, {
+            type: RestApiTypes.GET_REPO_BRANCH_COMMITS,
+            url,
+            id: commitKey,
+          })
+        );
+      }
+    }
+  };
+
+  const getCommitRecord = (repoId: string, branchName: string) => {
+    const key = `${repoId}_${branchName}`;
+    return repoBrancheCommits?.[key] || {};
   };
 
   if (loading) {
@@ -152,16 +178,35 @@ const Repository: React.FC<RepositoryProps> = (props) => {
         expandable={{
           expandedRowRender: (record: RepoData) => {
             const branches = repoBranches?.[record.id] || [];
+            if (repoLoading) {
+              return (
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  <Spin size="default" style={{ padding: "2rem" }} />
+                </div>
+              );
+            }
             return (
-              <Collapse accordion ghost>
+              <Collapse
+                accordion
+                ghost
+                onChange={(key: string | string[]) =>
+                  handlePanelChange(key, record.name)
+                }
+              >
                 {branches.length > 0 &&
                   branches.map((branch: any, index: number) => (
                     <Collapse.Panel
-                      key={`${record.id}_${index}`}
+                      key={`${record.id}_${get(
+                        branch,
+                        ["commit", "sha"],
+                        index
+                      )}_${branch.name}`}
                       header={branch.name}
                       style={{ fontWeight: "bold" }}
                     >
-                      <Card>{record.description}</Card>
+                      <CommitCardComponent
+                        commitRecord={getCommitRecord(record.id, branch.name)}
+                      />
                     </Collapse.Panel>
                   ))}
               </Collapse>

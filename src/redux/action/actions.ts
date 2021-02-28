@@ -6,4 +6,5 @@ export enum actions {
   SET_ACCESS_TOKEN = "setAccessToken",
   SET_REPO_STATE = "setRepoState",
   SET_REPO_BRANCHES = "setBranches",
+  SET_REPO_BRANCH_COMMITS = "setBranchCommits",
 }
